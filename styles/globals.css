@@ -2,26 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+.bg-gradient {
+  /* background-image: url('https://png.pngtree.com/background/20220715/original/pngtree-light-blue-background-picture-picture-image_1626628.jpg'); */
+  background: linear-gradient(to bottom, white, #f5f9ff);
+}
+
+.bg-gradient-header {
+  background: linear-gradient(to top, white, #f5f9ff);
+}
+
+@keyframes rainbow {
+  0% {
+    color: red;
   }
+
+  16% {
+    color: orange;
+  }
+
+  33% {
+    color: yellow;
+  }
+
+  50% {
+    color: green;
+  }
+
+  66% {
+    color: blue;
+  }
+
+  83% {
+    color: indigo;
+  }
+
+  100% {
+    color: violet;
+  }
+}
+
+.animate-rainbow {
+  animation: rainbow 2s linear infinite;
 }

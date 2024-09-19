@@ -7,6 +7,18 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    container: {
+      center: true,
+      screens: {
+        sm: '600px',
+        md: '728px',
+        lg: '1172px',
+      },
+      padding: {
+        DEFAULT: '1rem',
+        sm: '1rem',
+      },
+    },
     extend: {
       colors: {
         background: "var(--background)",
