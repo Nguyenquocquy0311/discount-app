@@ -31,8 +31,7 @@ const ProfileForm: React.FC = () => {
     }
   }, [userInfo, form]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onFinish = async (values: any) => {
+  const onFinish = async () => {
     setUploading(true);
     
     notification.success({message: 'Cập nhật thông tin thành công !!!'})

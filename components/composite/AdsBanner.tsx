@@ -2,6 +2,7 @@ import React from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Image from 'next/image';
 
 const adsCode = [
     {
@@ -38,7 +39,7 @@ const AdsBanner: React.FC = () => {
                 {adsCode.map((ad, index) => (
                     <div key={index}>
                         <a href={ad.url} target="_blank" rel="nofollow">
-                            <img src={ad.src} alt={`Ad ${index}`} height='auto' className='rounded-b-[30px] md:rounded-b-[70px] w-full' />
+                            <img src={ad.src} alt={`Ad ${index}`} className='rounded-b-[30px] md:rounded-b-[70px] w-full' />
                         </a>
                     </div>
                 ))}

@@ -1,5 +1,6 @@
 import React from 'react';
 import Logo from '../composite/header/Logo';
+import Image from 'next/image';
 
 export default function Footer() {
   return (

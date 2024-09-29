@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button, Card, Pagination, Select } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
+import Image from 'next/image';
 const { Option } = Select;
 
 // Dữ liệu sản phẩm thực tế mẫu
@@ -145,11 +146,11 @@ const ProductList: React.FC = () => {
                         // className="py-4"
                         style={{ width: 200 }}
                     >
-                    {platforms.map((platform) => (
-                        <Option key={platform} value={platform}>
-                            {platform}
-                        </Option>
-                    ))}
+                    {platforms.map((platform, index) => (
+                    <Option key={index} value={platform}>
+                        {platform}
+                    </Option>
+                ))}
                 </Select>
                 </div>
                 <Input.Search

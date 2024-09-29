@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Radio, Pagination } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
+import Image from 'next/image';
 
 interface VoucherProps {
   platform: string;

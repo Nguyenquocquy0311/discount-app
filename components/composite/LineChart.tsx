@@ -8,6 +8,7 @@ const Bar = dynamic(() => import('react-chartjs-2').then((mod) => mod.Bar), {
 interface RevenueChartProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: any;
 }
 
