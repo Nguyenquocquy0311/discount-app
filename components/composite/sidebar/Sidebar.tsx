@@ -44,7 +44,7 @@ export default function Sidebar() {
         <div
             className={classNames(
                 "h-full shadow-md transition-all duration-300 ease-in-out", // Smooth transition effect
-                scaleSidebar ? "w-60 border-r border-gray-200" : "w-24 bg-slate-200"
+                scaleSidebar ? "w-64 border-r border-gray-200" : "w-24 bg-slate-200"
             )}
         >
             <div className="py-4 px-2">

@@ -4,7 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup, 
   signOut, 
-  User 
+  User, 
 } from 'firebase/auth';
 import { authentication } from '../lib/firebase';
 import { useCallback, useEffect, useState } from 'react';

@@ -9,29 +9,27 @@ import UserTab from "./tab/UserTab";
 export default function DashboardLayout() {
   const { activeMenu } = useMenuContext();
 
-    const renderTable = () => {
-        switch (activeMenu) {
-            case 'user':
-                return <UserTab />;
-            case 'product':
-                return <ProductTab />;
-            case 'voucher':
-                return <VoucherTab />;
-            case 'chart':
-                return <ChartTab />
-            default:
-                return <h1>Hello World</h1>; // Default content or message
-        }
-    };
+  const renderTable = () => {
+    switch (activeMenu) {
+      case 'user':
+        return <UserTab />;
+      case 'product':
+        return <ProductTab />;
+      case 'voucher':
+        return <VoucherTab />;
+      case 'chart':
+        return <ChartTab />;
+      default:
+        return <h1>Hello World</h1>;
+    }
+  };
 
   return (
     <div className="flex h-screen">
       <Sidebar />
-
-      <div className="flex flex-grow">
+      <div className="w-full">
         <HeaderDashboard title="Trang quản trị" />
-
-        <div className="flex-grow pt-4 bg-slate-200">
+        <div className="pt-4 bg-slate-200">
           {renderTable()}
         </div>
       </div>

@@ -61,7 +61,7 @@ const ChartTab = () => {
     ],
     datasets: [
       {
-        label: 'Doanh thu (VND)',
+        label: 'Doanh thu ($)',
         data: chartData,
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgba(75, 192, 192, 1)',
@@ -76,17 +76,17 @@ const ChartTab = () => {
         beginAtZero: true,
         title: {
           display: true,
-          text: 'Doanh thu (VND)',
+          text: 'Doanh thu ($)',
         },
       },
     },
   };
 
   return (
-    <div className="bg-white mt-20 px-10 h-[85vh] rounded-xl">
+    <div className="bg-white px-10 h-full rounded-t-xl">
       {/* Header */}
       <div className="grid grid-flow-col justify-between py-5">
-        <div className="flex items-center">
+        <div className="flex items-center space-x-2">
           <label htmlFor="year-select" className="text-lg">Doanh thu năm</label>
           {/* Year Selector using Ant Design Select */}
           <Select

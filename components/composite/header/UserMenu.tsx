@@ -1,5 +1,5 @@
 import { Avatar, Dropdown, Menu } from "antd";
-import { CloudDownloadOutlined, LogoutOutlined, ProfileOutlined } from "@ant-design/icons";
+import { CloudDownloadOutlined, LogoutOutlined, ProfileOutlined, SnippetsOutlined, TagsOutlined, LineChartOutlined } from "@ant-design/icons";
 import Auth from "@/context/AuthContext";
 import { useRouter } from "next/router";
 // import { routes } from "@/constant/routes";
@@ -19,14 +19,27 @@ export default function UserMenu() {
                 <p>Điểm: 100</p>
             </div>
             <Menu.Divider />
-            <Menu.Item key="1" icon={<ProfileOutlined />} onClick={() => router.push('/profile')}>
+            <Menu.Item key="1" icon={<ProfileOutlined />} onClick={() => router.push('/')}>
+                Trang chủ
+            </Menu.Item>
+            <Menu.Item key="2" icon={<TagsOutlined />} onClick={() => router.push('/ma-giam-gia')}>
+                Voucher
+            </Menu.Item>
+            <Menu.Item key="3" icon={<SnippetsOutlined />}onClick={() => router.push('/san-pham')}>
+                Sản phẩm
+            </Menu.Item>
+            <Menu.Item key="4" icon={<LineChartOutlined />}onClick={() => router.push('/manager')}>
+                Manager
+            </Menu.Item>
+            <Menu.Divider />
+            <Menu.Item key="5" icon={<ProfileOutlined />} onClick={() => router.push('/profile')}>
                 Profile
             </Menu.Item>
-            <Menu.Item key="2" icon={<CloudDownloadOutlined />}>
+            <Menu.Item key="6" icon={<CloudDownloadOutlined />}>
                 Sản phẩm đã lưu
             </Menu.Item>
             <Menu.Divider />
-            <Menu.Item key="5" icon={<LogoutOutlined />} onClick={logout}>
+            <Menu.Item key="7" icon={<LogoutOutlined />} onClick={logout}>
                 Logout
             </Menu.Item>
         </Menu>

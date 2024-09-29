@@ -62,7 +62,7 @@ export default function UserTab() {
   };
 
   return (
-    <div className="bg-white mt-20 px-10 h-[85vh] rounded-xl">
+    <div className="bg-white px-10 h-full rounded-t-xl">
       {/* Header */}
       <div className="grid grid-flow-col justify-between py-5">
         <h1 className="font-sans mb-4">Có tất cả {filteredUsers.length} bản ghi</h1>
