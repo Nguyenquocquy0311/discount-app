@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 import React from 'react';
+import Lottie from 'lottie-react';
+import eduAnimation from '../../../../public/animation/lottie.json'
 
 const Hero: React.FC = () => {
     const router = useRouter()
@@ -21,10 +23,10 @@ const Hero: React.FC = () => {
                 </div>
 
                 {/* Right side - Image */}
-                {/* <div className="md:w-1/2 mt-8 md:mt-0">
+                <div className="md:w-1/2 mt-8 md:mt-0">
                     <Lottie animationData={eduAnimation}/>
-                    {/* <img src="img/tải xuống.png" alt="Conqueror's Journey Logo" className="w-full h-auto object-contain" /> 
-                </div> */}
+                    {/* <img src="img/tải xuống.png" alt="Conqueror's Journey Logo" className="w-full h-auto object-contain" /> */ }
+                </div>
             </div>
         </div>
     );
