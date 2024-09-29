@@ -1,5 +1,5 @@
 import Layout from "@/components/composite/Layout";
-import LadingPage from "@/components/page/landingpage/LandingPage";
+import DiscountCodePage from "@/components/composite/discountCodePage/DiscountCodePage";
 
 const Page = () => {
   return (
@@ -8,7 +8,7 @@ const Page = () => {
       title: 'Blog Giảm Giá - Săn Hàng Giảm Giá, Mua Sắm Thông Minh',
       description: 'Description',
      }}>
-      <LadingPage/>
+      <DiscountCodePage />
     </Layout>
   )
 }

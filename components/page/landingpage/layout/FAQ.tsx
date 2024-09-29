@@ -1,4 +1,5 @@
 import { Disclosure } from '@headlessui/react'
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import React from 'react'
 
 export type FAQItem = {
@@ -26,7 +27,7 @@ const FAQ = ({ faqs, title }: { title: string; faqs: FAQItem[] }) => {
                         {item.title}
                       </h3>
                       <div className="w-4 text-neutral">
-                        {open ? 'minus' : 'plus'}
+                        {open ? <MinusOutlined /> : <PlusOutlined />}
                       </div>
                     </Disclosure.Button>
                     <Disclosure.Panel className="pb-4 pl-5 pr-16 font-normal text-neutral-ink-600">
@@ -44,4 +45,3 @@ const FAQ = ({ faqs, title }: { title: string; faqs: FAQItem[] }) => {
 }
 
 export default FAQ
-

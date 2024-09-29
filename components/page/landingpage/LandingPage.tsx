@@ -1,8 +1,9 @@
 import Header from "@/components/composite/header/Header";
-import Hero from "../composite/landingpage/layout/Hero";
-import Footer from "../common/Footer";
-import Hot from "../composite/landingpage/layout/Hot";
-import FAQ, { FAQItem } from "../composite/landingpage/layout/FAQ";
+import Hero from "./layout/Hero";
+import Footer from "../../common/Footer";
+import Hot from "./layout/Hot";
+import FAQ, { FAQItem } from "./layout/FAQ";
+import SmoothTop from "@/components/composite/SmoothTop";
 
 export default function LadingPage() {
   const fagTitle = 'Câu hỏi thường gặp';
@@ -58,6 +59,7 @@ export default function LadingPage() {
         <FAQ title={fagTitle} faqs={faqItems}/>
         <Footer/>
       </div>
+      <SmoothTop />
     </>
   );
 }

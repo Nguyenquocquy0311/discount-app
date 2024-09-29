@@ -14,7 +14,7 @@ body {
 }
 
 .bg-gradient-header {
-  background: linear-gradient(to top, white, #f5f9ff);
+  background: linear-gradient(to top, white, #eaf2ff);
 }
 
 @keyframes rainbow {

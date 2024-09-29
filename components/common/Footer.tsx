@@ -52,7 +52,7 @@ export default function Footer() {
 
         {/* Dòng dưới */}
         <div className="border-t border-gray-500 mt-8 pt-4 text-center text-gray-200">
-          <p>Chịu trách nhiệm nội dung: <a href='http://nguyenquocquy.vercel.app' target='_blank' className='text-blue-600 font-semibold'>Nguyen Quoc Quy</a>. ©2024 SmartDocs. Địa chỉ: Cầu Giấy, Hà Nội. Điện thoại: 0923 488 371. Email: info@gmail.com.vn.</p>
+          <p>Chịu trách nhiệm nội dung: <a href='http://nguyenquocquy.vercel.app' target='_blank' className='text-blue-600 font-semibold'>Nguyen Quoc Quy</a>. ©2024Bloggiamgia. Địa chỉ: Cầu Giấy, Hà Nội. Điện thoại: 0923 488 371. Email: info@gmail.com.vn.</p>
         </div>
       </div>
     </footer>

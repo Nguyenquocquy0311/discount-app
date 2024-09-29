@@ -1,14 +1,14 @@
 import Layout from "@/components/composite/Layout";
-import LadingPage from "@/components/page/landingpage/LandingPage";
+import LoginPage from "@/components/page/LoginPage";
 
 const Page = () => {
   return (
     <Layout
     meta={{
-      title: 'Blog Giảm Giá - Săn Hàng Giảm Giá, Mua Sắm Thông Minh',
+      title: 'Bloggiamgia | Đăng nhập',
       description: 'Description',
      }}>
-      <LadingPage/>
+      <LoginPage/>
     </Layout>
   )
 }
