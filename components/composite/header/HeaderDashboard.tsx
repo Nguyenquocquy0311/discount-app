@@ -1,8 +1,8 @@
-import Logo from "./Logo";
-import { useEffect, useState } from "react";
+// import Logo from "./Logo";
+// import { useEffect, useState } from "react";
 import classNames from "classnames";
-import { useRouter } from "next/router";
-import Auth from "@/context/AuthContext";
+// import { useRouter } from "next/router";
+// import Auth from "@/context/AuthContext";
 import UserMenu from "./UserMenu";
 
 interface HeaderProps {
@@ -10,10 +10,10 @@ interface HeaderProps {
 }
 
 const HeaderDashboard:React.FC<HeaderProps> = ({title}) => {
-  const [isAtTop, setIsAtTop] = useState(true);
-  const router = useRouter();
+  // const [isAtTop, setIsAtTop] = useState(true);
+  // const router = useRouter();
 
-  const { userInfo, openModal } = Auth.useContainer()
+  // const { userInfo, openModal } = Auth.useContainer();
 
 
   return (

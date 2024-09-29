@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button, Card, Pagination, Select } from 'antd';
-import { SearchOutlined, SaveOutlined } from '@ant-design/icons';
+import { SaveOutlined } from '@ant-design/icons';
 const { Option } = Select;
 
 // Dữ liệu sản phẩm thực tế mẫu
@@ -140,15 +140,15 @@ const ProductList: React.FC = () => {
                 <div className='flex items-center'>
                     <span className='font-semibold mr-4'>Chọn sàn: </span>
                     <Select
-                    defaultValue="Tất cả"
-                    onChange={(value) => setSelectedPlatform(value)}
-                    // className="py-4"
-                    style={{ width: 200 }}
-                >
+                        defaultValue="Tất cả"
+                        onChange={(value) => setSelectedPlatform(value)}
+                        // className="py-4"
+                        style={{ width: 200 }}
+                    >
                     {platforms.map((platform) => (
-                        <Select.Option key={platform} value={platform}>
+                        <Option key={platform} value={platform}>
                             {platform}
-                        </Select.Option>
+                        </Option>
                     ))}
                 </Select>
                 </div>

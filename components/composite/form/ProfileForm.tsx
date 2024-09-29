@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Upload, notification } from 'antd';
-import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+// import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Auth from '@/context/AuthContext'; 
 
 const ProfileForm: React.FC = () => {
@@ -31,13 +31,14 @@ const ProfileForm: React.FC = () => {
     }
   }, [userInfo, form]);
 
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = async (values: any) => {
     setUploading(true);
     
     notification.success({message: 'Cập nhật thông tin thành công !!!'})
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFileChange = (info: any) => {
     setFileList(info.fileList);
   };

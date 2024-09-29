@@ -4,7 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const Hot: React.FC = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  // const [currentSlide, setCurrentSlide] = useState(0);
 
   const settings = {
     dots: true, 
@@ -15,7 +15,7 @@ const Hot: React.FC = () => {
     autoplay: true,
     autoplaySpeed: 1000,
     arrows: true,
-    beforeChange: (oldIndex: number, newIndex: number) => setCurrentSlide(newIndex),
+    // beforeChange: (oldIndex: number, newIndex: number) => setCurrentSlide(newIndex),
   };
 
   const items = [

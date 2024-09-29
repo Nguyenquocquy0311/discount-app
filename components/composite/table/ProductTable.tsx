@@ -24,6 +24,7 @@ export default function ProductTable({ products, onView, onDelete }: ProductTabl
     {
       title: 'Hành động',
       key: 'actions',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (text: any, product: Product) => (
         <>
           <Button onClick={() => onView(product)} className="border-none">

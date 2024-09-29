@@ -1,5 +1,5 @@
 import { useMenuContext } from '@/context/MenuSidebarContext';
-import { LineChartOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SettingOutlined, SnippetsOutlined, TagsOutlined, UsergroupDeleteOutlined } from '@ant-design/icons';
+import { LineChartOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SnippetsOutlined, TagsOutlined, UsergroupDeleteOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import classNames from 'classnames';
 import { useState } from 'react';

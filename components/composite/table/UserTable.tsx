@@ -24,6 +24,7 @@ export default function UserTable({ users, onView, onDelete }: UserTableProps) {
     {
       title: 'Actions',
       key: 'actions',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (text: any, user: User) => (
         <>
           <Button onClick={() => onView(user)} className="border-none">

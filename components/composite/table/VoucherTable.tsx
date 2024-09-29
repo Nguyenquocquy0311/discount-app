@@ -26,6 +26,7 @@ export default function VoucherTable({ vouchers, onView, onDelete }: VoucherTabl
     {
       title: 'Hành động',
       key: 'actions',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (text: any, voucher: Voucher) => (
         <>
           <Button onClick={() => onView(voucher)} className="border-none">

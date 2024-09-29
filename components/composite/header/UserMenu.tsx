@@ -1,8 +1,8 @@
 import { Avatar, Dropdown, Menu } from "antd";
-import { CloudDownloadOutlined, CloudUploadOutlined, LikeOutlined, LogoutOutlined, ProfileOutlined, UserOutlined } from "@ant-design/icons";
+import { CloudDownloadOutlined, LogoutOutlined, ProfileOutlined } from "@ant-design/icons";
 import Auth from "@/context/AuthContext";
 import { useRouter } from "next/router";
-import { routes } from "@/constant/routes";
+// import { routes } from "@/constant/routes";
 
 export default function UserMenu() {
     const {

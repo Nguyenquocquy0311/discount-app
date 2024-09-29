@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { GoogleOutlined, LoadingOutlined } from "@ant-design/icons";
 import Auth from "@/context/AuthContext";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 
 type FieldType = {
   email: string;
@@ -13,16 +13,17 @@ type FieldType = {
 
 export const LoginModal = () => {
   const { userInfo, loginWithGoogle, isLoadingGoogleLogin, isOpenModal, closeModal } = Auth.useContainer();
-  const router = useRouter();
+  // const router = useRouter();
 
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  const returnUrl = (router.query.returnUrl as string) || "/";
+  // const returnUrl = (router.query.returnUrl as string) || "/";
 
   const onFinish = (values: FieldType) => {
     console.log("Form submitted:", values);
     // Logic xử lý khi form được submit thành công
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinishFailed = (errorInfo: any) => {
     console.log("Form submission failed:", errorInfo);
     // Logic xử lý khi form không thành công

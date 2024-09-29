@@ -22,6 +22,7 @@ const LoginForm: React.FC = () => {
     console.log('Form submitted:', values);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinishFailed = (errorInfo: any) => {
     console.log('Form submission failed:', errorInfo);
   };
