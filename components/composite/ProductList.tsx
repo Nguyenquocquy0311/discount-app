@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button, Card, Pagination, Select } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
-import Image from 'next/image';
 const { Option } = Select;
 
 // Dữ liệu sản phẩm thực tế mẫu
@@ -173,6 +172,7 @@ const ProductList: React.FC = () => {
                         cover={<img alt={product.name} src={product.image} className="h-60 w-full object-cover" />}
                         actions={[
                             <Button 
+                                key={product.id}
                                 icon={<SaveOutlined />} 
                                 onClick={() => handleSaveProduct(product.id)}
                                 disabled={savedProducts.includes(product.id)}
