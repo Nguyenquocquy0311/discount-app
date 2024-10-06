@@ -1,38 +1,44 @@
-import { Button, Checkbox, Form, Input, Modal } from "antd";
+import { Button, Checkbox, Form, Input, Modal, notification } from "antd";
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { GoogleOutlined, LoadingOutlined } from "@ant-design/icons";
 import Auth from "@/context/AuthContext";
-// import { useRouter } from "next/router";
+import { routes } from "@/constant/routes";
+import { useRouter } from "next/router";
 
 type FieldType = {
-  email: string;
+  username: string;
   password: string;
   remember?: boolean;
 };
 
 export const LoginModal = () => {
-  const { userInfo, loginWithGoogle, isLoadingGoogleLogin, isOpenModal, closeModal } = Auth.useContainer();
-  // const router = useRouter();
+  const { userInfo, loginWithGoogle, isLoadingGoogleLogin, isOpenModalLogin, closeModalLogin, loginWithJWT } = Auth.useContainer();
+  const router = useRouter();
 
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   // const returnUrl = (router.query.returnUrl as string) || "/";
 
-  const onFinish = (values: FieldType) => {
+  const onFinish = async (values: FieldType) => {
     console.log("Form submitted:", values);
-    // Logic xử lý khi form được submit thành công
+
+    const username = values.username;
+    const password = values.password;
+
+    await loginWithJWT(username, password);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinishFailed = (errorInfo: any) => {
     console.log("Form submission failed:", errorInfo);
-    // Logic xử lý khi form không thành công
+
   };
 
   const handleLoginWithGoogle = () => {
     loginWithGoogle()
       .then(() => {
-        closeModal();
+        closeModalLogin();
+        router.push(routes.home)
       })
       .catch(() => {
         // Xử lý lỗi khi đăng nhập Google thất bại
@@ -41,14 +47,14 @@ export const LoginModal = () => {
     
   useEffect(() => {
     if (userInfo) {
-      closeModal()
+      closeModalLogin()
     }
   }, [userInfo])
 
   return (
     <Modal
-      open={isOpenModal}
-      onCancel={closeModal}
+      open={isOpenModalLogin}
+      onCancel={closeModalLogin}
       centered
       footer={null}
       width={420}
@@ -67,10 +73,10 @@ export const LoginModal = () => {
       >
         <Form.Item
           // label={<span className="font-semibold text-blue-500">Email</span>}
-          name="email"
+          name="username"
           rules={[
             { required: true, message: "Vui lòng nhập email!" },
-            { pattern: emailRegex, message: "Email không hợp lệ!" },
+            // { pattern: emailRegex, message: "Email không hợp lệ!" },
           ]}
         >
           <Input placeholder="Email" className="rounded-xl h-10 px-4" />

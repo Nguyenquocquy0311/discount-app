@@ -53,7 +53,7 @@ export default function LadingPage() {
   return (
     <>
       <Header/>
-      <div className="pt-16">
+      <div className="pt-0">
         <Hero/>
         <Hot />
         <FAQ title={fagTitle} faqs={faqItems}/>

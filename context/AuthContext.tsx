@@ -13,17 +13,52 @@ import {
 } from 'firebase/remote-config';
 import { firebaseApp } from '../lib/firebase';
 import { createContainer } from 'unstated-next';
+import { notification } from 'antd';
+import { UserType } from '../types/user';
 
-type UserInfo = User | null;
+type UserInfo = User | UserType | null;
 
 function useAuth() {
   const [loading, setLoading] = useState<boolean>(true);
   const [userInfo, setUserInfo] = useState<UserInfo>(null);
-  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [isOpenModalLogin, setIsOpenModalLogin] = useState(false);
+  const [isLoadingJwtSignup, setIsLoadingJwtSignup] = useState<boolean>(false);
   const [isLoadingGoogleLogin, setIsLoadingGoogleLogin] = useState<boolean>(false);
 
-  const closeModal = () => setIsOpenModal(false)
-  const openModal = () => setIsOpenModal(true)
+  const closeModalLogin = () => setIsOpenModalLogin(false)
+  const openModalLogin = () => setIsOpenModalLogin(true)
+
+  const loginWithJWT = async (username: string, password: string) => {
+    try {
+      const res = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+      
+      if (!res.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await res.json();
+
+      localStorage.setItem('user-info', JSON.stringify(data?.user));
+
+      setUserInfo(data?.user);
+
+      closeModalLogin()
+    } catch (e) {
+      notification.error({
+        message: 'Lỗi đăng nhập!',
+        description: 'Vui lòng gửi lại form.',
+      });
+    }
+  }
 
   const loginWithGoogle = async () => {
     setIsLoadingGoogleLogin(true);
@@ -53,6 +88,53 @@ function useAuth() {
     } catch (e) {
       setLoading(false);
       throw e;
+    }
+  };
+
+  const signupWithJWT = async (email: string, name: string, username: string, password: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          name: name,
+          username: username,
+          password: password,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Đăng ký thất bại');
+      }
+
+      // Hiển thị thông báo đăng ký thành công
+      notification.success({
+        message: 'Đăng ký thành công!',
+        description: 'Tài khoản đã được tạo. Bạn sẽ được đăng nhập tự động.',
+      });
+
+      // Nếu đăng ký thành công, tự động đăng nhập
+      await loginWithJWT(username, password);
+      setLoading(false);
+
+      // Hiển thị thông báo đăng nhập thành công
+      notification.success({
+        message: 'Đăng nhập thành công!',
+        description: `Chào mừng ${username}!`,
+      });
+
+    } catch (e) {
+      // Hiển thị thông báo lỗi nếu xảy ra
+      notification.error({
+        message: 'Lỗi đăng ký!',
+        description: 'Đã xảy ra lỗi, vui lòng kiểm tra lại thông tin và thử lại.',
+      });
+    } finally {
+      setLoading(false);  // Kết thúc trạng thái loading
     }
   };
 
@@ -102,10 +184,12 @@ function useAuth() {
     loginWithEmail,
     signupWithEmail,
     userInfo,
-    isOpenModal,
-    closeModal,
-    openModal,
+    isOpenModalLogin,
+    closeModalLogin,
+    openModalLogin,
     fetchAndActiveRemoteConfig,
+    loginWithJWT,
+    signupWithJWT
   };
 }
 

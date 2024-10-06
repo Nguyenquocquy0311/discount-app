@@ -1,5 +1,5 @@
 import { Avatar, Dropdown, Menu } from "antd";
-import { CloudDownloadOutlined, LogoutOutlined, ProfileOutlined, SnippetsOutlined, TagsOutlined, LineChartOutlined } from "@ant-design/icons";
+import { CloudDownloadOutlined, LogoutOutlined, ProfileOutlined, SnippetsOutlined, TagsOutlined, LineChartOutlined, UserOutlined } from "@ant-design/icons";
 import Auth from "@/context/AuthContext";
 import { useRouter } from "next/router";
 // import { routes } from "@/constant/routes";
@@ -15,7 +15,7 @@ export default function UserMenu() {
     const menuUser = (
         <Menu>
             <div className="mx-4">
-                <p className="font-medium text-lg">{userInfo?.displayName}</p>
+                <p className="font-medium text-lg">{userInfo?.name || 'Guest'}</p> {/* Thêm fallback khi name không có */}
                 <p>Điểm: 100</p>
             </div>
             <Menu.Divider />
@@ -47,8 +47,11 @@ export default function UserMenu() {
 
     return (
         <Dropdown overlay={menuUser} placement="bottomRight" trigger={['click']} className="text-lg">
-            {/* {(!userInfo?.photoURL || userInfo.photoURL === '') ?  <Avatar size="large" icon={<UserOutlined />} className="cursor-pointer hover:opacity-80" /> : */}
-            <Avatar size="large" src={userInfo?.photoURL} className="cursor-pointer hover:opacity-80" /> 
+            {(!userInfo?.photoURL || userInfo?.photoURL === '') ?  (
+                <Avatar size="large" icon={<UserOutlined />} className="cursor-pointer hover:opacity-80" />
+            ) : (
+                <Avatar size="large" src={userInfo?.photoURL} className="cursor-pointer hover:opacity-80" />
+            )}
         </Dropdown>
     );
 }

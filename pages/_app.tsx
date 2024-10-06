@@ -1,4 +1,5 @@
 import { LoginModal } from "@/components/composite/modal/LoginModal";
+import { RegisterModal } from "@/components/composite/modal/RegisterModal";
 import Auth from "@/context/AuthContext";
 import { MenuProvider } from "@/context/MenuSidebarContext";
 import "@/styles/globals.css";
@@ -9,7 +10,8 @@ export default function App({ Component, pageProps }: AppProps) {
     <Auth.Provider>
       <MenuProvider>
         <Component {...pageProps} />
-        <LoginModal/>
+        <LoginModal />
+        <RegisterModal />
       </MenuProvider>
     </Auth.Provider>
   );
