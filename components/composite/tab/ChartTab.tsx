@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Select } from "antd";
-import RevenueChart from "../LineChart";
+import RevenueChart from "../RevenueChart";
 
 // Ant Design Select Option
 const { Option } = Select;

@@ -16,7 +16,7 @@ type RegisterFieldType = {
 };
 
 export const RegisterModal = () => {
-  const { userInfo, loading, isLoadingGoogleLogin, isOpenModalLogin, closeModalLogin, signupWithJWT, loginWithGoogle } = Auth.useContainer();
+  const { userInfo, loading, isLoadingGoogleLogin, isOpenModalSignup, closeModalSignup, signupWithJWT, loginWithGoogle } = Auth.useContainer();
   const router = useRouter();
 
   const onFinish = async (values: RegisterFieldType) => {
@@ -42,7 +42,7 @@ export const RegisterModal = () => {
   const handleLoginWithGoogle = () => {
     loginWithGoogle()
       .then(() => {
-        closeModalLogin();
+        closeModalSignup();
         router.push(routes.home)
       })
       .catch(() => {
@@ -52,14 +52,14 @@ export const RegisterModal = () => {
 
   useEffect(() => {
     if (userInfo) {
-      closeModalLogin();
+      closeModalSignup();
     }
   }, [userInfo]);
 
   return (
     <Modal
-      open={isOpenModalLogin}
-      onCancel={closeModalLogin}
+      open={isOpenModalSignup}
+      onCancel={closeModalSignup}
       centered
       footer={null}
       width={420}

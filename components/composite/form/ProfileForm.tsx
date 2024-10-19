@@ -14,17 +14,17 @@ const ProfileForm: React.FC = () => {
   useEffect(() => {
     if (userInfo) {
       form.setFieldsValue({
-        fullName: userInfo.displayName,
+        fullName: userInfo.name,
         email: userInfo.email,
       });
 
-      if (userInfo.photoURL) {
+      if (userInfo) {
         setFileList([
           {
             uid: '-1',
             name: 'avatar.png',
             status: 'done',
-            url: userInfo.photoURL,
+            url: userInfo.avatar,
           } as UploadFile,
         ]);
       }

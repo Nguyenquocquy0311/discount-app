@@ -16,17 +16,20 @@ import { createContainer } from 'unstated-next';
 import { notification } from 'antd';
 import { UserType } from '../types/user';
 
-type UserInfo = User | UserType | null;
+type UserInfo = UserType | null;
 
 function useAuth() {
   const [loading, setLoading] = useState<boolean>(true);
   const [userInfo, setUserInfo] = useState<UserInfo>(null);
   const [isOpenModalLogin, setIsOpenModalLogin] = useState(false);
+  const [isOpenModalSignup, setIsOpenModalSignup] = useState(false);
   const [isLoadingJwtSignup, setIsLoadingJwtSignup] = useState<boolean>(false);
   const [isLoadingGoogleLogin, setIsLoadingGoogleLogin] = useState<boolean>(false);
 
-  const closeModalLogin = () => setIsOpenModalLogin(false)
-  const openModalLogin = () => setIsOpenModalLogin(true)
+  const closeModalLogin = () => setIsOpenModalLogin(false);
+  const openModalLogin = () => setIsOpenModalLogin(true);
+  const closeModalSignup = () => setIsOpenModalSignup(false);
+  const openModalSignup = () => setIsOpenModalSignup(true);
 
   const loginWithJWT = async (username: string, password: string) => {
     try {
@@ -40,13 +43,14 @@ function useAuth() {
           password: password,
         }),
       });
-      
+
       if (!res.ok) {
         throw new Error('Login failed');
       }
 
       const data = await res.json();
 
+      sessionStorage.setItem('auth-token', data?.jwt);
       localStorage.setItem('user-info', JSON.stringify(data?.user));
 
       setUserInfo(data?.user);
@@ -60,36 +64,36 @@ function useAuth() {
     }
   }
 
-  const loginWithGoogle = async () => {
-    setIsLoadingGoogleLogin(true);
-    const provider = new GoogleAuthProvider();
+  // const loginWithGoogle = async () => {
+  //   setIsLoadingGoogleLogin(true);
+  //   const provider = new GoogleAuthProvider();
 
-    try {
-      const res = await signInWithPopup(authentication, provider);
-      if (res && res.user) {
-        localStorage.setItem('user-info', JSON.stringify(res.user));
-        setUserInfo(res.user); 
-      }
-      setIsLoadingGoogleLogin(false);
-      return res;
-    } catch (e) {
-      setIsLoadingGoogleLogin(false);
-      throw e;
-    }
-  };
+  //   try {
+  //     const res = await signInWithPopup(authentication, provider);
+  //     if (res && res.user) {
+  //       localStorage.setItem('user-info', JSON.stringify(res.user));
+  //       setUserInfo(res.user); 
+  //     }
+  //     setIsLoadingGoogleLogin(false);
+  //     return res;
+  //   } catch (e) {
+  //     setIsLoadingGoogleLogin(false);
+  //     throw e;
+  //   }
+  // };
 
-  const loginWithEmail = async (email: string, password: string) => {
-    setLoading(true);
-    try {
-      const res = await signInWithEmailAndPassword(authentication, email, password);
-      setUserInfo(res?.user);
-      localStorage.setItem('user-info', JSON.stringify(res?.user));
-      return res;
-    } catch (e) {
-      setLoading(false);
-      throw e;
-    }
-  };
+  // const loginWithEmail = async (email: string, password: string) => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await signInWithEmailAndPassword(authentication, email, password);
+  //     setUserInfo(res?.user);
+  //     localStorage.setItem('user-info', JSON.stringify(res?.user));
+  //     return res;
+  //   } catch (e) {
+  //     setLoading(false);
+  //     throw e;
+  //   }
+  // };
 
   const signupWithJWT = async (email: string, name: string, username: string, password: string) => {
     setLoading(true);
@@ -138,24 +142,28 @@ function useAuth() {
     }
   };
 
-  const signupWithEmail = async (email: string, password: string) => {
-    setLoading(true);
-    try {
-      const res = await createUserWithEmailAndPassword(authentication, email, password);
-      setUserInfo(res?.user);
-      localStorage.setItem('user-info', JSON.stringify(res?.user));
-      return res;
-    } catch (e) {
-      setLoading(false);
-      throw e;
-    }
-  };
+  // const signupWithEmail = async (email: string, password: string) => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await createUserWithEmailAndPassword(authentication, email, password);
+  //     setUserInfo(res?.user);
+  //     localStorage.setItem('user-info', JSON.stringify(res?.user));
+  //     return res;
+  //   } catch (e) {
+  //     setLoading(false);
+  //     throw e;
+  //   }
+  // };
 
   const logout = () => {
-    signOut(authentication).then(() => {
-      setUserInfo(null);
-      localStorage.removeItem('user-info');
-    });
+    // signOut(authentication).then(() => {
+    //   setUserInfo(null);
+    //   localStorage.removeItem('user-info');
+    // });
+
+    setUserInfo(null);
+    localStorage.removeItem('user-info');
+    sessionStorage.removeItem('auth-token');
   };
 
   useEffect(() => {
@@ -178,15 +186,19 @@ function useAuth() {
 
   return {
     loading,
-    loginWithGoogle,
+    // loginWithGoogle,
     logout,
     isLoadingGoogleLogin,
-    loginWithEmail,
-    signupWithEmail,
+    // loginWithEmail,
+    // signupWithEmail,
     userInfo,
     isOpenModalLogin,
+    isOpenModalSignup,
     closeModalLogin,
     openModalLogin,
+    openModalSignup,
+    setIsOpenModalLogin,
+    closeModalSignup,
     fetchAndActiveRemoteConfig,
     loginWithJWT,
     signupWithJWT

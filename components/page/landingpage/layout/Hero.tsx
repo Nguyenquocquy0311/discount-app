@@ -3,12 +3,13 @@ import React from 'react';
 import Lottie from 'lottie-react';
 import eduAnimation from '../../../../public/animation/lottie.json'
 import classnames from 'classnames';
+import { routes } from '@/constant/routes';
 
 const Hero: React.FC = () => {
     const router = useRouter()
 
     const redirectDiscountPage = () => {
-        router.push('ma-giam-gia')
+        router.push(routes.voucher)
     }
 
     return (

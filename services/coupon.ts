@@ -1,33 +1,34 @@
 import { getAuthToken } from "@/helper";
-import { IProduct, Product } from "@/types/product";
+import { Voucher } from "@/types/voucher";
 
+const path = 'http://localhost:8080/api/coupon'
 const token = getAuthToken();
 
-export const getAllProducts = async (): Promise<IProduct[]> => {
+export const getAllCoupon = async (): Promise<Voucher[]> => {
     try {
-        const response = await fetch('http://localhost:8080/api/products', {
+        const response = await fetch(`${path}/get_all`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': token ? `Bearer ${token}` : ''
+                'Authorization': `Bearer ${token}`
             },
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch products');
+            throw new Error('Failed to fetch coupons');
         }
 
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching coupons:', error);
         throw error;
     }
 };
 
-export const getProductDetail = async (id: number): Promise<Product> => {
+export const getValidCoupon = async (): Promise<Voucher[]> => {
     try {
-        const response = await fetch(`http://localhost:8080/api/product/detail?id=${id}`, {
+        const response = await fetch(`${path}/get_valid`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,13 +36,13 @@ export const getProductDetail = async (id: number): Promise<Product> => {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch products');
+            throw new Error('Failed to fetch coupons');
         }
 
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching coupons:', error);
         throw error;
     }
 };

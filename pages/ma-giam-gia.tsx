@@ -1,5 +1,5 @@
 import Layout from "@/components/composite/Layout";
-import DiscountCodePage from "@/components/composite/discountCodePage/DiscountCodePage";
+import DiscountCodePage from "@/components/page/discountCodePage/DiscountCodePage";
 
 const Page = () => {
   return (

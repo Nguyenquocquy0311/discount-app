@@ -1,24 +1,40 @@
-import React, { useState } from 'react';
-import { Button, Radio, Pagination } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Radio, Pagination, message } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
+import { Voucher } from '@/types/voucher';
+import { getValidCoupon } from '@/services/coupon';
+import { formatDayMonthYear } from '@/helper';
 
-interface VoucherProps {
+type VoucherCardProps = {
   platform: string;
-  discount: string;
-  minOrder: string;
-  expiry: string;
-  notice: string;
-  bannerUrl: string;
-}
+  discountAmount: number;
+  percentageUsed: number;
+  expiredAt: string;
+  couponCode: string;
+  note: string;
+  affLink: string;
+};
 
-const VoucherCard: React.FC<VoucherProps> = ({
+const VoucherCard: React.FC<VoucherCardProps> = ({
   platform,
-  discount,
-  minOrder,
-  expiry,
-  notice,
-  bannerUrl,
+  discountAmount,
+  percentageUsed,
+  expiredAt,
+  couponCode,
+  note,
+  affLink,
 }) => {
+  const handleCopyVoucherCode = (code: string) => {
+    navigator.clipboard
+      .writeText(code)
+      .then(() => {
+        message.success('Đã sao chép mã giảm giá');
+      })
+      .catch((err) => {
+        message.error('Lỗi khi sao chép mã giảm giá');
+      });
+  };
+
   return (
     <div className="p-4 bg-white rounded-xl shadow-lg border border-gray-200">
       <div className="flex items-center">
@@ -30,16 +46,16 @@ const VoucherCard: React.FC<VoucherProps> = ({
           />
         </div>
         <div className="flex-grow ml-4">
-          <h4 className="text-lg font-bold text-green-600">Giảm {discount}</h4>
-          <p className="text-sm text-gray-500">ĐH tối thiểu: {minOrder}</p>
-          <p className="text-sm text-green-600">{notice}</p>
+          <h4 className="text-lg font-bold text-green-600">Giảm {discountAmount}K</h4>
+          <p className="text-sm text-gray-500">Tỉ lệ dùng: {percentageUsed}%</p>
+          <p className="text-sm text-green-600">Lưu ý: {note}</p>
           <div className="flex items-center mt-2">
             <ClockCircleOutlined className="text-gray-400 mr-2" />
-            <span className="text-gray-500 text-sm">HSD: {expiry}</span>
+            <span className="text-gray-500 text-sm">HSD: {formatDayMonthYear(expiredAt)}</span>
           </div>
           <div className="flex justify-between mt-4">
-            <Button className="text-green-600 border-green-600">#Lưu trên banner</Button>
-            <Button type="primary" href={bannerUrl} target="_blank">
+            <Button className="text-green-600 border-green-600" onClick={() => handleCopyVoucherCode(couponCode)}>#Lưu trên banner</Button>
+            <Button type="primary" href={affLink} target="_blank">
               Đến Banner
             </Button>
           </div>
@@ -50,22 +66,28 @@ const VoucherCard: React.FC<VoucherProps> = ({
 };
 
 const VoucherList = () => {
-  const vouchers = [
-    { platform: 'Lazada', discount: '30K', minOrder: '150.000đ', expiry: '29/09', notice: 'Lưu ý: Mã lên mỗi ở các khung giờ 0H - 11H', bannerUrl: '#' },
-    { platform: 'Shopee', discount: '50K', minOrder: '200.000đ', expiry: '30/09', notice: 'Áp dụng cho đơn hàng trên toàn sàn Shopee', bannerUrl: '#' },
-    { platform: 'Tiki', discount: '70K', minOrder: '500.000đ', expiry: '28/09', notice: 'Mã chỉ áp dụng cho TikiNow', bannerUrl: '#' },
-    { platform: 'Lazada', discount: '100K', minOrder: '1.000.000đ', expiry: '29/09', notice: 'Lưu ý: Mã có số lượng giới hạn', bannerUrl: '#' },
-    { platform: 'Shopee', discount: '20K', minOrder: '100.000đ', expiry: '30/09', notice: 'Chỉ áp dụng vào cuối tuần', bannerUrl: '#' },
-    { platform: 'Lazada', discount: '40K', minOrder: '300.000đ', expiry: '28/09', notice: 'Áp dụng cho LazMall', bannerUrl: '#' },
-    { platform: 'Shopee', discount: '60K', minOrder: '400.000đ', expiry: '01/10', notice: 'Mã lên từ 0H - 12H hàng ngày', bannerUrl: '#' },
-    { platform: 'Tiki', discount: '50K', minOrder: '250.000đ', expiry: '02/10', notice: 'Mã chỉ áp dụng cho TikiNow', bannerUrl: '#' },
-    { platform: 'Lazada', discount: '20K', minOrder: '200.000đ', expiry: '29/09', notice: 'Lưu ý: Mã có số lượng giới hạn', bannerUrl: '#' },
-    { platform: 'Shopee', discount: '10K', minOrder: '100.000đ', expiry: '30/09', notice: 'Chỉ áp dụng vào cuối tuần', bannerUrl: '#' },
-  ];
-
+  const [vouchers, setVouchers] = useState<Voucher[]>([])
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const pageSize = 6;
+
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      try {
+        setLoading(true);
+        const data = await getValidCoupon();
+        setVouchers(data);
+      } catch (error) {
+        console.error('Error fetching vouchers:', error);
+        message.error('Lỗi tải dữ liệu voucher');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVouchers();
+  }, []);
 
   const filteredVouchers = selectedPlatform
     ? vouchers.filter(voucher => voucher.platform === selectedPlatform)
@@ -105,17 +127,18 @@ const VoucherList = () => {
 
         {/* Danh sách voucher */}
         <div className="w-3/4 p-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {paginatedVouchers.length > 0 ? (
               paginatedVouchers.map((voucher, index) => (
                 <VoucherCard
                   key={index}
                   platform={voucher.platform}
-                  discount={voucher.discount}
-                  minOrder={voucher.minOrder}
-                  expiry={voucher.expiry}
-                  notice={voucher.notice}
-                  bannerUrl={voucher.bannerUrl}
+                  discountAmount={voucher.discountAmount}
+                  percentageUsed={voucher.percentageUsed}
+                  expiredAt={voucher.expiredAt}
+                  couponCode={voucher.couponCode}
+                  note={voucher.note}
+                  affLink={voucher.affLink}
                 />
               ))
             ) : (
@@ -130,6 +153,8 @@ const VoucherList = () => {
               pageSize={pageSize}
               total={filteredVouchers.length}
               onChange={handlePageChange}
+              showSizeChanger={false}
+              align='center'
             />
           </div>
         </div>

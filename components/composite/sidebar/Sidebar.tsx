@@ -44,7 +44,7 @@ export default function Sidebar() {
         <div
             className={classNames(
                 "h-full shadow-md transition-all duration-300 ease-in-out", // Smooth transition effect
-                scaleSidebar ? "w-64 border-r border-gray-200" : "w-24 bg-slate-200"
+                scaleSidebar ? "w-80 border-r border-gray-200" : "w-24 bg-slate-200"
             )}
         >
             <div className="py-4 px-2">
@@ -57,7 +57,7 @@ export default function Sidebar() {
                         <li
                             key={item.key}
                             className={classNames(
-                                "my-1 py-3 hover:bg-blue-400 hover:text-white rounded-md cursor-pointer transition-colors duration-200 ease-in-out",
+                                "my-1 py-3 hover:bg-blue-400 hover:text-white rounded-md cursor-pointer",
                                 activeMenu === item.key && 'bg-blue-400 text-white',
                                 scaleSidebar ? 'flex px-4' : 'grid grid-flow-row'
                             )}
@@ -68,7 +68,7 @@ export default function Sidebar() {
                             </div>
                             <span
                                 className={classNames(
-                                    "transition-all duration-300", // Transition for text
+                                    // "transition-all duration-300", // Transition for text
                                     scaleSidebar ? 'mx-4 opacity-100' : 'mx-auto text-[12px]'
                                 )}
                             >

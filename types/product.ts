@@ -1,13 +1,46 @@
-export interface Product {
+export interface IProduct {
     id: number;
-    shop: object;
     name: string;
     image: string;
     affLink: string;
     currentPrice: number;
-    productType: object;
-    isOfficialShop?: boolean
-    ratingAvg?: number;
+    productType: {
+        id: number;
+        category: string;
+    };
+    ratingAvg: number | null;
+    ratingCount: number;
+    historyPrice: {
+        date: string;
+        price: number;
+    }[];
+    saved: boolean;
+}
+
+export interface Product {
+    id: number;
+    shop: {
+        id: number;
+        shopName: string;
+        createdAt: string;
+    };
+    name: string;
+    image: string;
+    affLink: string;
+    currentPrice: number;
+    productType: {
+        id: number;
+        category: string;
+    };
+    isOfficialShop: boolean | null;
+    ratingAvg: number | null;
     sold: number;
     ratingCount: number;
+    createdAt: string;
+    updatedAt: string;
+    historyPrice: {
+        date: string;
+        price: number;
+    }[];
 }
+

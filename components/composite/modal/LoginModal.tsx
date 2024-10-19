@@ -108,13 +108,13 @@ export const LoginModal = () => {
         </Form.Item>
       </Form>
 
-      <div className="flex items-center my-6">
+      {/* <div className="flex items-center my-6">
         <div className="flex-grow border-t border-gray-300"></div>
         <span className="mx-2 text-gray-500">Hoặc</span>
         <div className="flex-grow border-t border-gray-300"></div>
-      </div>
+      </div> */}
 
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center">
         <Button
           type="default"
           className="w-full h-12 rounded-lg flex items-center justify-center text-blue-500"
@@ -123,7 +123,7 @@ export const LoginModal = () => {
           {isLoadingGoogleLogin ? <LoadingOutlined /> : <GoogleOutlined />}
           <span className="ml-2">Đăng nhập với Google</span>
         </Button>
-      </div>
+      </div> */}
     </Modal>
   );
 };

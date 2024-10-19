@@ -1,35 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { Input, Button, Card, Pagination, Select, notification } from 'antd';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Input, Button, Card, Pagination, Select, message, notification, Skeleton } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import Auth from '@/context/AuthContext';
 import { getAllProducts } from '@/services/product';
-import { Product } from '@/types/product';
+import { IProduct, Product } from '@/types/product';
+import { useRouter } from 'next/router';
+import { useProduct } from '@/context/ProductContext';
+import { saveProduct } from '@/services/save_product';
 const { Option } = Select;
 
 const ProductList: React.FC = () => {
+  const router = useRouter();
+  const { setSelectedProduct } = useProduct();
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPlatform, setSelectedPlatform] = useState<string | undefined>(undefined);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
   const [savedProducts, setSavedProducts] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const platforms = ['Tất cả', 'Shopee', 'Lazada', 'Tiki'];
-  const pageSize = 12;
-
   const { userInfo } = Auth.useContainer();
 
-  // Fetch products from API
+  const pageSize = 12;
+  const platforms = ['Tất cả', 'Shopee', 'Lazada', 'Tiki'];
+
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const products = await getAllProducts();
-        setProducts(products);
-        setFilteredProducts(products);
+        const fetchedProducts = await getAllProducts();
+        setProducts(fetchedProducts);
       } catch (error) {
-        notification.error({ message: 'Lỗi khi lấy danh sách sản phẩm' });
+        message.error('Lỗi khi lấy danh sách sản phẩm');
       } finally {
         setLoading(false);
       }
@@ -38,40 +40,87 @@ const ProductList: React.FC = () => {
     fetchProducts();
   }, []);
 
-  // Handle saving products
-  const handleSaveProduct = (productId: number) => {
-    if (!userInfo) {
-      notification.error({ message: 'Bạn cần đăng nhập để lưu sản phẩm' });
-      return;
-    }
-    setSavedProducts([...savedProducts, productId]);
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            product.affLink.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesPlatform = selectedPlatform === 'Tất cả' || !selectedPlatform ||
+                              product.productType.category === selectedPlatform;
+      return matchesSearch && matchesPlatform;
+    });
+  }, [products, searchTerm, selectedPlatform]);
+
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredProducts.slice(startIndex, startIndex + pageSize);
+  }, [filteredProducts, currentPage]);
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
   };
 
-  // Handle page change
+  const handlePlatformChange = (value: string) => {
+    setSelectedPlatform(value);
+    setCurrentPage(1);
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  // Get the products for the current page
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
+  const handleSaveProduct = async (productId: number) => {
+    if (!userInfo) {
+      message.error('Bạn cần đăng nhập để lưu sản phẩm');
+      return;
+    }
+    try {
+      const success = await saveProduct(productId);
+      if (success) {
+        message.success('Đã lưu sản phẩm !!!');
+        setProducts(products.map(product => 
+          product.id === productId ? { ...product, saved: true } : product
+        ));
+      } else {
+        message.error('Lỗi khi lưu sản phẩm !');
+      }
+    } catch (error) {
+      message.error(String(error));
+      console.error(error);
+    }
+  };
+
+  const handleViewProduct = (product: IProduct) => {
+    setSelectedProduct(product);
+    router.push(`/san-pham/${product.id}`);
+  };
+
+  const renderProductSkeleton = () => (
+    <Card className="relative rounded-lg overflow-hidden shadow-lg border border-gray-200 flex flex-col h-full">
+      <Skeleton.Image className="h-60 w-full" active />
+      <div className="flex flex-col h-full p-4">
+        <Skeleton active paragraph={{ rows: 2 }} />
+        <div className="mt-auto">
+          <Skeleton.Button active className="w-full mb-2" />
+          <Skeleton.Button active className="w-full" />
+        </div>
+      </div>
+    </Card>
   );
 
   return (
-    <div className="py-10 min-h-screen bg-gray-50">
-      {/* Search and select */}
+    <div className="py-10 min-h-screen">
       <div className="flex flex-col lg:flex-row justify-between items-center mb-10">
         <div className="flex items-center mb-4 lg:mb-0">
           <span className="font-semibold mr-4 text-lg">Chọn sàn: </span>
           <Select
             defaultValue="Tất cả"
-            onChange={(value) => setSelectedPlatform(value)}
+            onChange={handlePlatformChange}
             style={{ width: 200 }}
             className="shadow-md rounded-md"
           >
-            {platforms.map((platform, index) => (
-              <Option key={index} value={platform}>
+            {platforms.map((platform) => (
+              <Option key={platform} value={platform}>
                 {platform}
               </Option>
             ))}
@@ -79,16 +128,16 @@ const ProductList: React.FC = () => {
         </div>
         <Input.Search
           placeholder="Tìm kiếm sản phẩm theo tên hoặc URL"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="rounded-lg w-80 shadow-md"
+          onSearch={handleSearch}
+          className="w-full lg:w-80 shadow-md"
         />
       </div>
 
-      {/* Product list */}
       {loading ? (
-        <div className="flex justify-center items-center h-80">
-          <span>Đang tải dữ liệu...</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[...Array(12)].map((_, index) => (
+            <div key={index}>{renderProductSkeleton()}</div>
+          ))}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -96,51 +145,55 @@ const ProductList: React.FC = () => {
             <Card
               key={product.id}
               hoverable
-              className="relative rounded-lg overflow-hidden shadow-lg border border-gray-200"
+              className="relative rounded-lg overflow-hidden shadow-lg border border-gray-200 flex flex-col h-full"
               cover={<img alt={product.name} src={product.image} className="h-60 w-full object-cover" />}
             >
-              <h2 className="font-bold text-lg text-gray-800 mb-2">{product.name}</h2>
-              <p className="text-green-600 font-semibold mb-2">
-                Giá: {product.currentPrice.toLocaleString()} VND
-              </p>
-              <Button
-                type="link"
-                href={product.affLink}
-                target="_blank"
-                className="w-full bg-blue-500 text-white font-semibold hover:bg-blue-600 mt-2"
-              >
-                Xem sản phẩm
-              </Button>
+              <div className="flex flex-col h-full p-4">
+                <div className="flex-grow">
+                  <h2 className="font-bold text-lg text-gray-800 mb-2 line-clamp-2 h-14">
+                    {product.name}
+                  </h2>
+                  <p className="text-green-600 font-semibold mb-2">
+                    Giá: {product.currentPrice.toLocaleString()} VND
+                  </p>
+                </div>
+                <div className="mt-auto">
+                  <Button
+                    type="primary"
+                    onClick={() => handleViewProduct(product)}
+                    className="w-full bg-blue-500 text-white font-semibold hover:bg-blue-600 mb-2"
+                  >
+                    Xem sản phẩm
+                  </Button>
+                  <Button
+                    key={product.id}
+                    icon={<SaveOutlined />}
+                    onClick={() => handleSaveProduct(product.id)}
+                    disabled={product.saved}
+                    className={`w-full ${
+                      product.saved ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600'
+                    }`}
+                  >
+                    {product.saved ? 'Đã lưu' : 'Lưu sản phẩm'}
+                  </Button>
+                </div>
+              </div>
               <div className="absolute right-0 top-0 p-2 text-white bg-blue-400 font-bold rounded-bl-lg">
                 {product.ratingAvg ? product.ratingAvg.toFixed(1) : '0'} ⭐
-              </div>
-              <div className="w-full border-t border-gray-200 pt-4 flex justify-between items-center mt-4">
-                <Button
-                  key={product.id}
-                  icon={<SaveOutlined />}
-                  onClick={() => handleSaveProduct(product.id)}
-                  disabled={savedProducts.includes(product.id)}
-                  className={`${
-                    savedProducts.includes(product.id)
-                      ? 'bg-green-500 text-white'
-                      : 'bg-gray-100 text-gray-600'
-                  } w-full hover:bg-green-400`}
-                >
-                  {savedProducts.includes(product.id) ? 'Đã lưu' : 'Lưu sản phẩm'}
-                </Button>
               </div>
             </Card>
           ))}
         </div>
       )}
 
-      {/* Pagination */}
       <Pagination
         current={currentPage}
-        total={products.length}
+        total={filteredProducts.length}
         pageSize={pageSize}
         onChange={handlePageChange}
         className="mt-8 text-center"
+        showSizeChanger={false}
+        align='center'
       />
     </div>
   );

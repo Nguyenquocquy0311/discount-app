@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { GoogleOutlined, LoadingOutlined } from '@ant-design/icons';
 import Auth from '@/context/AuthContext';
 import { useRouter } from 'next/router';
+import { routes } from '@/constant/routes';
 
 type FieldType = {
   email: string;
@@ -12,11 +13,11 @@ type FieldType = {
 };
 
 const LoginForm: React.FC = () => {
-  const { loginWithGoogle, isLoadingGoogleLogin } = Auth.useContainer();
+  const { isLoadingGoogleLogin } = Auth.useContainer();
   const router = useRouter()
 
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  const returnUrl = router.query.returnUrl as string || '/';
+  const returnUrl = router.query.returnUrl as string || routes.home;
 
   const onFinish = (values: FieldType) => {
     console.log('Form submitted:', values);
@@ -27,13 +28,13 @@ const LoginForm: React.FC = () => {
     console.log('Form submission failed:', errorInfo);
   };
 
-  const handleLoginWithGoogle = () => {
-    loginWithGoogle()
-      .then(() => {
-        router.push(returnUrl);
-      })
-      .catch(() => {});
-  };
+  // const handleLoginWithGoogle = () => {
+  //   loginWithGoogle()
+  //     .then(() => {
+  //       router.push(returnUrl);
+  //     })
+  //     .catch(() => {});
+  // };
 
   return (
     <Form
@@ -88,12 +89,12 @@ const LoginForm: React.FC = () => {
         <div className="flex-grow border-t border-blue-400"></div>
       </div>
 
-      <div className="flex justify-center my-6">
+      {/* <div className="flex justify-center my-6">
         <Button type="default" className="w-full flex items-center justify-center space-x-3 py-5 text-blue-500 rounded-lg" onClick={handleLoginWithGoogle}>
           {isLoadingGoogleLogin ? <LoadingOutlined /> : <GoogleOutlined />}
           <span>Đăng nhập với Google</span>
         </Button>
-      </div>
+      </div> */}
     </Form>
   );
 };

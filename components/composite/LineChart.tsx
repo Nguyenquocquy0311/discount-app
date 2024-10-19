@@ -1,24 +1,46 @@
-import dynamic from 'next/dynamic';
-import 'chart.js/auto';
 
-const Bar = dynamic(() => import('react-chartjs-2').then((mod) => mod.Bar), {
-  ssr: false,
-});
+import React from 'react';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-interface RevenueChartProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options: any;
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+interface LineChartProps {
+  data: {
+    labels: string[];
+    datasets: {
+      label: string;
+      data: number[];
+      borderColor: string;
+      backgroundColor: string;
+    }[];
+  };
 }
 
-const RevenueChart = ({ data, options }: RevenueChartProps) => {
-  return (
-    <div className='bg-white mt-5 px-8 pt-4 rounded-xl w-[120vh] mx-auto'>
-      {/* Chart */}
-      <Bar id='chart' data={data} options={options} />
-    </div>
-  );
+const LineChart: React.FC<LineChartProps> = ({ data }) => {
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: true,
+        text: 'Lịch sử giá',
+      },
+    },
+  };
+
+  return <Line data={data} options={options} />;
 };
 
-export default RevenueChart;
+export default LineChart;

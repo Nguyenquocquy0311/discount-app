@@ -1,11 +1,16 @@
 import Header from "@/components/composite/header/Header";
 import Footer from "@/components/common/Footer";
 import { Breadcrumb } from "antd";
-import ProductList from "../ProductList";
-import SmoothTop from "../SmoothTop";
-import GiftBanner from "./GiftBanner";
+import SmoothTop from "../../composite/SmoothTop";
+import ProductDetail from "./ProductDetail";
+import { useProduct } from "@/context/ProductContext";
+import { truncateString } from "@/helper";
+import { routes } from "@/constant/routes";
 
-export default function ProductPage() {
+export default function ProductDetailPage() {
+  const { selectedProduct } = useProduct();
+
+  if (!selectedProduct) return <div>Product not found !!!</div>
 
   return (
     <>
@@ -19,7 +24,7 @@ export default function ProductPage() {
             className="my-6"
             items={[
             {
-              href: '/',
+              href: routes.home,
               title: (
                 <>
                   <span>Trang chủ</span>
@@ -27,15 +32,22 @@ export default function ProductPage() {
               ),
             },
             {
+              href: routes.product,
               title: (
                 <>
                   <span>Sản phẩm</span>
                 </>
               ),
+            },
+            {
+              title: (
+                <>
+                  <span>{truncateString(selectedProduct.name)}</span>
+                </>
+              ),
             }
             ]} />
-          <GiftBanner />
-          <ProductList />
+          <ProductDetail />
         </div>
         <Footer />
       </div>
