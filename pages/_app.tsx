@@ -1,3 +1,4 @@
+import { ForgotPasswordModal } from "@/components/composite/modal/ForgotPasswordModal";
 import { LoginModal } from "@/components/composite/modal/LoginModal";
 import { RegisterModal } from "@/components/composite/modal/RegisterModal";
 import Auth from "@/context/AuthContext";
@@ -14,6 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
           <LoginModal />
           <RegisterModal />
+          <ForgotPasswordModal />
         </ProductProvider>
       </MenuProvider>
     </Auth.Provider>

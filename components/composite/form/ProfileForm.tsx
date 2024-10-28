@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Upload, notification } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { UploadFile } from 'antd/lib/upload/interface';
-// import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import Auth from '@/context/AuthContext'; 
+import { PlusOutlined, EditOutlined } from '@ant-design/icons';
+import { UploadFile, RcFile } from 'antd/lib/upload/interface';
+import Auth from '@/context/AuthContext';
+import { uploadAvatar, updateUserInfo } from '@/services/user';
 
 const ProfileForm: React.FC = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [uploading, setUploading] = useState(false);
-  const { userInfo } = Auth.useContainer();
-  const [form] = Form.useForm(); 
-    
+  const { userInfo, setUserInfo } = Auth.useContainer();
+  const [form] = Form.useForm();
+
   useEffect(() => {
     if (userInfo) {
       form.setFieldsValue({
@@ -18,7 +18,7 @@ const ProfileForm: React.FC = () => {
         email: userInfo.email,
       });
 
-      if (userInfo) {
+      if (userInfo.avatar) {
         setFileList([
           {
             uid: '-1',
@@ -31,15 +31,36 @@ const ProfileForm: React.FC = () => {
     }
   }, [userInfo, form]);
 
-  const onFinish = async () => {
+  const handleUpload = async (file: RcFile) => {
     setUploading(true);
-    
-    notification.success({message: 'Cập nhật thông tin thành công !!!'})
+    try {
+      const updatedUser = await uploadAvatar(file);
+
+      setFileList([
+        {
+          uid: '-1',
+          name: file.name,
+          status: 'done',
+          url: updatedUser.avatar,
+        },
+      ]);
+
+      notification.success({ message: 'Cập nhật ảnh đại diện thành công!' });
+    } catch (error) {
+      notification.error({ message: 'Cập nhật ảnh đại diện thất bại. Vui lòng thử lại!' });
+    } finally {
+      setUploading(false);
+    }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleFileChange = (info: any) => {
-    setFileList(info.fileList);
+  const onFinish = async (values: { fullName: string; email: string }) => {
+    try {
+      const updatedUser = await updateUserInfo(values.fullName, values.email);
+      setUserInfo(updatedUser);
+      notification.success({ message: 'Cập nhật thông tin thành công!' });
+    } catch (error) {
+      notification.error({ message: 'Cập nhật thông tin thất bại. Vui lòng thử lại!' });
+    }
   };
 
   return (
@@ -76,21 +97,34 @@ const ProfileForm: React.FC = () => {
       >
         <Upload
           name="avatar"
-          beforeUpload={() => false}
           fileList={fileList}
-          onChange={handleFileChange}
           accept="image/*"
-          listType="picture-card">
+          listType="picture-card"
+          beforeUpload={(file) => {
+            handleUpload(file);
+            return false;
+          }}
+          onRemove={() => {
+            setFileList([]);
+          }}
+        >
+          {fileList.length === 0 && !uploading ? (
             <button style={{ border: 0, background: 'none' }} type="button">
               <PlusOutlined />
               <div style={{ marginTop: 8 }}>Upload</div>
             </button>
-          </Upload>
+          ) : (
+            <button style={{ border: 0, background: 'none' }} type="button">
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </button>
+          )}
+        </Upload>
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 8, span: 14 }}>
-        <Button type="primary" htmlType="submit" loading={uploading}>
-          {uploading ? 'Đang cập nhật...' : 'Cập nhật hồ sơ'}
+        <Button type="primary" htmlType="submit">
+          Cập nhật hồ sơ
         </Button>
       </Form.Item>
     </Form>

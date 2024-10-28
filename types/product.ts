@@ -42,5 +42,35 @@ export interface Product {
         date: string;
         price: number;
     }[];
+    vouchersFound: {
+        id: string;
+        admin: null;
+        adminId: null;
+        platform: string;
+        affLink: string;
+        targetUser: null;
+        status: null;
+        startAt: string;
+        expiredAt: string;
+        couponType: string;
+        couponCode: string;
+        couponCategoryEntity: {
+            id: number;
+            categoryName: string;
+            avatarUrl: string;
+        };
+        couponCategoryId: number;
+        discountAmount: number;
+        discountReward: number;
+        totalClick: number;
+        minSpend: number;
+        percentageUsed: number;
+        voucherShop: null;
+        note: string;
+        createdAt: string;
+        isInWallet: boolean;
+        title: string;
+        longDescription: string;
+    }[];
 }
 

@@ -50,7 +50,7 @@ export default function Sidebar() {
             <div className="py-4 px-2">
                 {/* Smooth opacity transition for logo */}
                 <div className={classNames("transition-opacity duration-300", scaleSidebar ? "opacity-100" : "opacity-0")}>
-                    {scaleSidebar && <Logo textColor='text-black'/>}
+                    {scaleSidebar && <Logo textColor='text-black' />}
                 </div>
                 <ul className="list-none font-sans mt-2">
                     {menu.map((item) => (

@@ -1,14 +1,14 @@
-import { 
-  GoogleAuthProvider, 
+import {
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signInWithPopup, 
-  signOut, 
-  User, 
+  signInWithPopup,
+  signOut,
+  User,
 } from 'firebase/auth';
 import { authentication } from '../lib/firebase';
 import { useCallback, useEffect, useState } from 'react';
-import { 
+import {
   getRemoteConfig
 } from 'firebase/remote-config';
 import { firebaseApp } from '../lib/firebase';
@@ -25,11 +25,14 @@ function useAuth() {
   const [isOpenModalSignup, setIsOpenModalSignup] = useState(false);
   const [isLoadingJwtSignup, setIsLoadingJwtSignup] = useState<boolean>(false);
   const [isLoadingGoogleLogin, setIsLoadingGoogleLogin] = useState<boolean>(false);
+  const [isOpenModalForgotPassword, setIsOpenModalForgotPassword] = useState(false);
 
   const closeModalLogin = () => setIsOpenModalLogin(false);
   const openModalLogin = () => setIsOpenModalLogin(true);
   const closeModalSignup = () => setIsOpenModalSignup(false);
   const openModalSignup = () => setIsOpenModalSignup(true);
+  const closeModalForgotPassword = () => setIsOpenModalForgotPassword(false);
+  const openModalForgotPassword = () => setIsOpenModalForgotPassword(true);
 
   const loginWithJWT = async (username: string, password: string) => {
     try {
@@ -192,13 +195,19 @@ function useAuth() {
     // loginWithEmail,
     // signupWithEmail,
     userInfo,
+    setUserInfo,
     isOpenModalLogin,
     isOpenModalSignup,
+    isOpenModalForgotPassword,
     closeModalLogin,
     openModalLogin,
     openModalSignup,
+    openModalForgotPassword,
     setIsOpenModalLogin,
+    setIsOpenModalSignup,
+    setIsOpenModalForgotPassword,
     closeModalSignup,
+    closeModalForgotPassword,
     fetchAndActiveRemoteConfig,
     loginWithJWT,
     signupWithJWT

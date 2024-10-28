@@ -7,6 +7,7 @@ import { IProduct, Product } from '@/types/product';
 import { useRouter } from 'next/router';
 import { useProduct } from '@/context/ProductContext';
 import { saveProduct } from '@/services/save_product';
+import { getAuthToken } from '@/helper';
 const { Option } = Select;
 
 const ProductList: React.FC = () => {
@@ -18,6 +19,7 @@ const ProductList: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [savedProducts, setSavedProducts] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [authToken, setAuthToken] = useState<string | null>(null);
 
   const { userInfo } = Auth.useContainer();
 
@@ -43,9 +45,9 @@ const ProductList: React.FC = () => {
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            product.affLink.toLowerCase().includes(searchTerm.toLowerCase());
+        product.affLink.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesPlatform = selectedPlatform === 'Tất cả' || !selectedPlatform ||
-                              product.productType.category === selectedPlatform;
+        product.productType.category === selectedPlatform;
       return matchesSearch && matchesPlatform;
     });
   }, [products, searchTerm, selectedPlatform]);
@@ -78,7 +80,7 @@ const ProductList: React.FC = () => {
       const success = await saveProduct(productId);
       if (success) {
         message.success('Đã lưu sản phẩm !!!');
-        setProducts(products.map(product => 
+        setProducts(products.map(product =>
           product.id === productId ? { ...product, saved: true } : product
         ));
       } else {
@@ -170,9 +172,8 @@ const ProductList: React.FC = () => {
                     icon={<SaveOutlined />}
                     onClick={() => handleSaveProduct(product.id)}
                     disabled={product.saved}
-                    className={`w-full ${
-                      product.saved ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600'
-                    }`}
+                    className={`w-full ${product.saved ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600'
+                      }`}
                   >
                     {product.saved ? 'Đã lưu' : 'Lưu sản phẩm'}
                   </Button>

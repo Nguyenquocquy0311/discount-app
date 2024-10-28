@@ -1,22 +1,34 @@
-import { Button, Input, Modal, Form, notification } from "antd";
-import { useState } from "react";
-import UserTable, { User } from "../table/UserTable";
+import { Button, Input, Modal, Form, notification, Select } from "antd";
+import { useEffect, useState } from "react";
+import UserTable from "../table/UserTable";
+import { UserResponse } from "@/types/user";
+import { getListAccount } from "@/services/user";
 
 export default function UserTab() {
-  // Initial user data
-  const initialUsers: User[] = [
-    { id: 1, username: 'johndoe', name: 'John Doe', email: 'john.doe@example.com', role: 'Admin' },
-    { id: 2, username: 'janesmith', name: 'Jane Smith', email: 'jane.smith@example.com', role: 'Manager' },
-    { id: 3, username: 'boblee', name: 'Bob Lee', email: 'bob.lee@example.com', role: 'User' },
-    { id: 4, username: 'lucysky', name: 'Lucy Sky', email: 'lucy.sky@example.com', role: 'Admin' },
-    { id: 5, username: 'markbrown', name: 'Mark Brown', email: 'mark.brown@example.com', role: 'User' },
-  ];
+  const [users, setUsers] = useState<UserResponse[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [form] = Form.useForm();
 
-  const [users, setUsers] = useState<User[]>(initialUsers); // Store user list
-  const [searchTerm, setSearchTerm] = useState(""); // Store search term
-  const [selectedUser, setSelectedUser] = useState<User | null>(null); // Store selected user for viewing/editing
-  const [isModalVisible, setIsModalVisible] = useState(false); // Control modal visibility
-  const [isEditMode, setIsEditMode] = useState(false); // Determine if it's edit or add mode
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const data = await getListAccount();
+      setUsers(data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      notification.error({ message: "Failed to fetch users" });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Filter users based on search term
   const filteredUsers = users.filter(
@@ -24,10 +36,23 @@ export default function UserTab() {
       user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.role.toLowerCase().includes(searchTerm.toLowerCase())
+      user.role.roleName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const showModal = (user?: User) => {
+  useEffect(() => {
+    if (selectedUser) {
+      form.setFieldsValue({
+        username: selectedUser.username,
+        name: selectedUser.name,
+        email: selectedUser.email,
+        role: selectedUser.role.roleName,
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [selectedUser, form]);
+
+  const showModal = (user?: UserResponse) => {
     if (user) {
       setSelectedUser(user);
       setIsEditMode(true);
@@ -38,27 +63,41 @@ export default function UserTab() {
     setIsModalVisible(true);
   };
 
-  const handleFormSubmit = (values: User) => {
-    if (isEditMode && selectedUser) {
-      setUsers((prev) =>
-        prev.map((user) =>
-          user.id === selectedUser.id ? { ...selectedUser, ...values } : user
-        )
-      );
-      notification.success({ message: "Người dùng đã được chỉnh sửa!" });
-    } else {
-      // Add new user
-      const newUser = { ...values, id: users.length + 1 };
-      setUsers((prev) => [...prev, newUser]);
-      notification.success({ message: "Người dùng mới đã được thêm!" });
+  const handleFormSubmit = async (values: UserResponse) => {
+    try {
+      if (isEditMode && selectedUser) {
+        // TODO: Implement API call to update user
+        // For now, we'll update the local state
+        setUsers((prev) =>
+          prev.map((user) =>
+            user.id === selectedUser.id ? { ...selectedUser, ...values } : user
+          )
+        );
+        notification.success({ message: "Người dùng đã được chỉnh sửa!" });
+      } else {
+        // TODO: Implement API call to add new user
+        // For now, we'll update the local state
+        const newUser = { ...values, id: Date.now() };
+        setUsers((prev) => [...prev, newUser]);
+        notification.success({ message: "Người dùng mới đã được thêm!" });
+      }
+      setIsModalVisible(false);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      notification.error({ message: "Failed to submit form" });
     }
-    setIsModalVisible(false);
   };
 
-  // Handle user deletion
-  const handleDelete = (userId: number) => {
-    setUsers((prev) => prev.filter((user) => user.id !== userId));
-    notification.success({ message: "Người dùng đã được xoá!" });
+  const handleDelete = async (userId: number) => {
+    try {
+      // TODO: Implement API call to delete user
+      // For now, we'll update the local state
+      setUsers((prev) => prev.filter((user) => user.id !== userId));
+      notification.success({ message: "Người dùng đã được xoá!" });
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      notification.error({ message: "Failed to delete user" });
+    }
   };
 
   return (
@@ -84,19 +123,23 @@ export default function UserTab() {
       {/* User Table with View, Edit, Delete options */}
       <UserTable
         users={filteredUsers}
-        onView={(user) => showModal(user)} // View/Edit user
-        onDelete={(userId) => handleDelete(userId)} // Delete user
+        onView={(user) => showModal(user)}
+        onDelete={(userId) => handleDelete(userId)}
+        loading={loading}
       />
 
       {/* Add/Edit Modal */}
       <Modal
         title={isEditMode ? "Chỉnh sửa người dùng" : "Thêm người dùng mới"}
         visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={() => {
+          setIsModalVisible(false);
+          form.resetFields();
+        }}
         footer={null}
       >
         <Form
-          initialValues={selectedUser || { username: '', name: '', email: '', role: '' }}
+          form={form}
           onFinish={handleFormSubmit}
         >
           <Form.Item
@@ -118,7 +161,10 @@ export default function UserTab() {
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: 'Please input the email!' }]}
+            rules={[
+              { required: true, message: 'Please input the email!' },
+              { type: 'email', message: 'Please enter a valid email!' }
+            ]}
           >
             <Input />
           </Form.Item>
@@ -128,7 +174,11 @@ export default function UserTab() {
             name="role"
             rules={[{ required: true, message: 'Please select the role!' }]}
           >
-            <Input />
+            <Select>
+              <Select.Option value="ADMIN">Admin</Select.Option>
+              <Select.Option value="MANAGER">Manager</Select.Option>
+              <Select.Option value="USER">User</Select.Option>
+            </Select>
           </Form.Item>
 
           <Form.Item>

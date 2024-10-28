@@ -1,31 +1,43 @@
-import { Button, Table, Popconfirm } from "antd";
+import { Button, Table, Popconfirm, Tag } from "antd";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
-
-export interface User {
-    id: number;
-    username: string;
-    name: string;
-    email: string;
-    role: 'Admin' | 'Manager' | 'User'
-}
+import { UserResponse } from "@/types/user";
 
 interface UserTableProps {
-  users: User[];
-  onView: (user: User) => void;
+  users: UserResponse[];
+  onView: (user: UserResponse) => void;
   onDelete: (userId: number) => void;
+  loading: boolean;
 }
 
-export default function UserTable({ users, onView, onDelete }: UserTableProps) {
+export default function UserTable({ users, onView, onDelete, loading }: UserTableProps) {
+
   const columns = [
     { title: 'Username', dataIndex: 'username', key: 'username' },
     { title: 'Name', dataIndex: 'name', key: 'name' },
     { title: 'Email', dataIndex: 'email', key: 'email' },
-    { title: 'Role', dataIndex: 'role', key: 'role' },
+    { 
+      title: 'Role', 
+      dataIndex: 'role', 
+      key: 'role',
+      render: (role: { roleName: string }) => {
+        let color = 'blue';
+        if (role.roleName === 'ADMIN') {
+          color = 'red';
+        } else if (role.roleName === 'MANAGER') {
+          color = 'green';
+        }
+        return (
+          <Tag color={color}>
+            {role.roleName.toUpperCase()}
+          </Tag>
+        );
+      }
+    },
     {
       title: 'Actions',
       key: 'actions',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      render: (text: any, user: User) => (
+      render: (text: any, user: UserResponse ) => (
         <>
           <Button onClick={() => onView(user)} className="border-none">
             <EditOutlined />
@@ -43,5 +55,5 @@ export default function UserTable({ users, onView, onDelete }: UserTableProps) {
     },
   ];
 
-  return <Table columns={columns} dataSource={users} rowKey="id" />;
+  return <Table columns={columns} dataSource={users} rowKey="id" loading={loading} />;
 }

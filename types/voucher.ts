@@ -6,9 +6,9 @@ export interface Voucher {
     affLink: string;
     targetUser: string | null;
     status: string | null;
-    startAt: string; // ISO date string
-    expiredAt: string; // Date with time format
-    couponType: string | null;
+    startAt: string;
+    expiredAt: string;
+    couponType: string;
     couponCode: string;
     couponCategoryEntity: {
         id: number;

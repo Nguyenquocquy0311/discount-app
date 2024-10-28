@@ -12,7 +12,7 @@ export default function ProductPage() {
     <>
       <Header/>
       <div className="pt-16">
-        <div className="container">
+        <div className="container pt-4">
           <Breadcrumb
             style={{
               fontSize: '16px'

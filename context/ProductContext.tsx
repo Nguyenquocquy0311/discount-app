@@ -2,14 +2,14 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { IProduct, Product } from '@/types/product';
 
 interface ProductContextType {
-  selectedProduct: IProduct | null;
-  setSelectedProduct: (product: IProduct | null) => void;
+  selectedProduct: IProduct | Product | null;
+  setSelectedProduct: (product: IProduct | Product | null) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | Product | null>(null);
 
   return (
     <ProductContext.Provider value={{ selectedProduct, setSelectedProduct }}>

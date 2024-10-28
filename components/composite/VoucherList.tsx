@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Radio, Pagination, message } from 'antd';
+import { Button, Radio, Pagination, message, Skeleton } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { Voucher } from '@/types/voucher';
 import { getValidCoupon } from '@/services/coupon';
-import { formatDayMonthYear } from '@/helper';
+import { formatCurrency, formatDayMonthYear } from '@/helper';
 
 type VoucherCardProps = {
   platform: string;
@@ -11,6 +11,7 @@ type VoucherCardProps = {
   percentageUsed: number;
   expiredAt: string;
   couponCode: string;
+  couponType: string;
   note: string;
   affLink: string;
 };
@@ -21,6 +22,7 @@ const VoucherCard: React.FC<VoucherCardProps> = ({
   percentageUsed,
   expiredAt,
   couponCode,
+  couponType,
   note,
   affLink,
 }) => {
@@ -46,7 +48,7 @@ const VoucherCard: React.FC<VoucherCardProps> = ({
           />
         </div>
         <div className="flex-grow ml-4">
-          <h4 className="text-lg font-bold text-green-600">Giảm {discountAmount}K</h4>
+          <h4 className="text-lg font-bold text-green-600">Giảm {formatCurrency(discountAmount)}{couponType === 'percent' ? '%' : ''}</h4>
           <p className="text-sm text-gray-500">Tỉ lệ dùng: {percentageUsed}%</p>
           <p className="text-sm text-green-600">Lưu ý: {note}</p>
           <div className="flex items-center mt-2">
@@ -54,7 +56,7 @@ const VoucherCard: React.FC<VoucherCardProps> = ({
             <span className="text-gray-500 text-sm">HSD: {formatDayMonthYear(expiredAt)}</span>
           </div>
           <div className="flex justify-between mt-4">
-            <Button className="text-green-600 border-green-600" onClick={() => handleCopyVoucherCode(couponCode)}>#Lưu trên banner</Button>
+            <Button className="text-green-600 border-green-600" onClick={() => handleCopyVoucherCode(couponCode)}>#Sao chép mã</Button>
             <Button type="primary" href={affLink} target="_blank">
               Đến Banner
             </Button>
@@ -93,7 +95,6 @@ const VoucherList = () => {
     ? vouchers.filter(voucher => voucher.platform === selectedPlatform)
     : vouchers;
 
-  // Phân trang
   const paginatedVouchers = filteredVouchers.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
@@ -102,6 +103,12 @@ const VoucherList = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  const VoucherSkeleton = () => (
+    <div className="p-4 bg-white rounded-xl shadow-lg border border-gray-200">
+      <Skeleton avatar active paragraph={{ rows: 3 }} />
+    </div>
+  );
 
   return (
     <div className="my-4">
@@ -128,13 +135,19 @@ const VoucherList = () => {
         {/* Danh sách voucher */}
         <div className="w-3/4 p-5">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {paginatedVouchers.length > 0 ? (
+            {loading ? (
+              // Show skeletons while loading
+              Array(6).fill(null).map((_, index) => (
+                <VoucherSkeleton key={index} />
+              ))
+            ) : paginatedVouchers.length > 0 ? (
               paginatedVouchers.map((voucher, index) => (
                 <VoucherCard
                   key={index}
                   platform={voucher.platform}
                   discountAmount={voucher.discountAmount}
                   percentageUsed={voucher.percentageUsed}
+                  couponType={voucher.couponType}
                   expiredAt={voucher.expiredAt}
                   couponCode={voucher.couponCode}
                   note={voucher.note}

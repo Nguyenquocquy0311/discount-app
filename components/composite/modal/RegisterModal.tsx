@@ -16,7 +16,7 @@ type RegisterFieldType = {
 };
 
 export const RegisterModal = () => {
-  const { userInfo, loading, isLoadingGoogleLogin, isOpenModalSignup, closeModalSignup, signupWithJWT, loginWithGoogle } = Auth.useContainer();
+  const { userInfo, loading, isLoadingGoogleLogin, isOpenModalSignup, closeModalSignup, signupWithJWT } = Auth.useContainer();
   const router = useRouter();
 
   const onFinish = async (values: RegisterFieldType) => {
@@ -37,17 +37,6 @@ export const RegisterModal = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinishFailed = (errorInfo: any) => {
     console.log("Form submission failed:", errorInfo);
-  };
-
-  const handleLoginWithGoogle = () => {
-    loginWithGoogle()
-      .then(() => {
-        closeModalSignup();
-        router.push(routes.home)
-      })
-      .catch(() => {
-        // Xử lý lỗi khi đăng nhập Google thất bại
-      });
   };
 
   useEffect(() => {
@@ -71,7 +60,7 @@ export const RegisterModal = () => {
         name="registerForm"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
-        initialValues={{ remember: true }}
+        initialValues={{ remember: false }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -92,7 +81,7 @@ export const RegisterModal = () => {
         >
           <Input placeholder="Tên người dùng" className="rounded-xl h-10 px-4" />
         </Form.Item>
-              
+
         <Form.Item
           name="username"
           rules={[{ required: true, message: "Vui lòng nhập tên đăng nhập!" }]}

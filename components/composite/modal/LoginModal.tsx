@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, Modal, notification } from "antd";
+import { Button, Checkbox, Form, Input, Modal, message } from "antd";
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { GoogleOutlined, LoadingOutlined } from "@ant-design/icons";
@@ -9,19 +9,14 @@ import { useRouter } from "next/router";
 type FieldType = {
   username: string;
   password: string;
-  remember?: boolean;
+  // remember?: boolean;
 };
 
 export const LoginModal = () => {
-  const { userInfo, loginWithGoogle, isLoadingGoogleLogin, isOpenModalLogin, closeModalLogin, loginWithJWT } = Auth.useContainer();
+  const { userInfo, isLoadingGoogleLogin, isOpenModalLogin, closeModalLogin, loginWithJWT, setIsOpenModalSignup, setIsOpenModalForgotPassword } = Auth.useContainer();
   const router = useRouter();
 
-  // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  // const returnUrl = (router.query.returnUrl as string) || "/";
-
   const onFinish = async (values: FieldType) => {
-    console.log("Form submitted:", values);
-
     const username = values.username;
     const password = values.password;
 
@@ -31,20 +26,30 @@ export const LoginModal = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinishFailed = (errorInfo: any) => {
     console.log("Form submission failed:", errorInfo);
-
+    message.error("Đăng nhập thất bại!");
   };
 
-  const handleLoginWithGoogle = () => {
-    loginWithGoogle()
-      .then(() => {
-        closeModalLogin();
-        router.push(routes.home)
-      })
-      .catch(() => {
-        // Xử lý lỗi khi đăng nhập Google thất bại
-      });
-  };
-    
+  const handleOpenModalSignup = () => {
+    closeModalLogin();
+    setIsOpenModalSignup(true);
+  }
+
+  const handleOpenModalForgotPassword = () => {
+    closeModalLogin();
+    setIsOpenModalForgotPassword(true);
+  }
+
+  // const handleLoginWithGoogle = () => {
+  //   loginWithGoogle()
+  //     .then(() => {
+  //       closeModalLogin();
+  //       router.push(routes.home)
+  //     })
+  //     .catch(() => {
+  //       // Xử lý lỗi khi đăng nhập Google thất bại
+  //     });
+  // };
+
   useEffect(() => {
     if (userInfo) {
       closeModalLogin()
@@ -66,7 +71,7 @@ export const LoginModal = () => {
         name="loginForm"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
-        initialValues={{ remember: true }}
+        initialValues={{ remember: false }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -90,16 +95,25 @@ export const LoginModal = () => {
           <Input.Password placeholder="Mật khẩu" className="rounded-lg h-10 px-4" />
         </Form.Item>
 
-        <Form.Item className="mb-2">
-          <div className="flex justify-between">
-            <Form.Item<FieldType> name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Nhớ mật khẩu</Checkbox>
-          </Form.Item>
-          <Link href="/signup" className="text-blue-500 hover:underline">
+        {/* <Form.Item className="mb-2"> */}
+        <div className="flex justify-between mb-2">
+          {/* <Form.Item<FieldType> name="remember" valuePropName="checked" noStyle>
+              <Checkbox>Nhớ mật khẩu</Checkbox>
+            </Form.Item> */}
+          <button
+            className="text-blue-500 hover:underline"
+            onClick={handleOpenModalSignup}
+          >
             Chưa có tài khoản?
-          </Link>
-         </div>
-        </Form.Item>
+          </button>
+          <button
+            className="text-blue-500 hover:underline"
+            onClick={handleOpenModalForgotPassword}
+          >
+            Quên mật khẩu?
+          </button>
+        </div>
+        {/* </Form.Item> */}
 
         <Form.Item className="flex justify-center">
           <Button type="primary" htmlType="submit" className="w-full h-10 rounded-lg">
