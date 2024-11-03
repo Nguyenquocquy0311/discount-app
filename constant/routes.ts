@@ -3,6 +3,7 @@ export const routes = {
   login: '/login',
   signup: '/signup',
   product: '/san-pham',
+  productSaved: '/san-pham/da-luu',
   voucher: '/ma-giam-gia',
   profile: '/profile',
   admin: '/admin',

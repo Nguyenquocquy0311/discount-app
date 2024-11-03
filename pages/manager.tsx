@@ -1,5 +1,6 @@
 import DashboardLayout from "@/components/composite/DashboardLayout";
 import Layout from "@/components/composite/Layout";
+import { Role } from "@/constant/role";
 import { routes } from "@/constant/routes";
 import Auth from "@/context/AuthContext";
 import { useRouter } from "next/router";
@@ -10,17 +11,20 @@ const Page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!userInfo) {
-      router.push(routes.notFound)
+    if (userInfo) {
+      const allowedRoles = [Role.MANAGER];
+      if (!allowedRoles.includes(userInfo.role)) {
+        router.push(routes.notFound);
+      }
     }
-  }, [userInfo])
+  }, [userInfo, router])
 
   return (
     <Layout
-    meta={{
-      title: 'Blog Giảm Giá - Săn Hàng Giảm Giá, Mua Sắm Thông Minh',
-      description: 'Description',
-     }}>
+      meta={{
+        title: 'Blog Giảm Giá - Manager',
+        description: 'Description',
+      }}>
       <DashboardLayout />
     </Layout>
   )

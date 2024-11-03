@@ -3,14 +3,14 @@ import Footer from "@/components/common/Footer";
 import { Breadcrumb } from "antd";
 import ProductList from "../../composite/ProductList";
 import SmoothTop from "../../composite/SmoothTop";
-import GiftBanner from "./GiftBanner";
+import GiftBanner from "./components/GiftBanner";
 import { routes } from "@/constant/routes";
 
 export default function ProductPage() {
 
   return (
     <>
-      <Header/>
+      <Header />
       <div className="pt-16">
         <div className="container pt-4">
           <Breadcrumb
@@ -19,21 +19,21 @@ export default function ProductPage() {
             }}
             className="my-6"
             items={[
-            {
-              href: routes.home,
-              title: (
-                <>
-                  <span>Trang chủ</span>
-                </>
-              ),
-            },
-            {
-              title: (
-                <>
-                  <span>Sản phẩm</span>
-                </>
-              ),
-            }
+              {
+                href: routes.home,
+                title: (
+                  <>
+                    <span>Trang chủ</span>
+                  </>
+                ),
+              },
+              {
+                title: (
+                  <>
+                    <span>Sản phẩm</span>
+                  </>
+                ),
+              }
             ]} />
           <GiftBanner />
           <ProductList />

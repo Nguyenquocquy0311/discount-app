@@ -5,11 +5,15 @@ import ProductTab from "./tab/ProductTab";
 import VoucherTab from "./tab/VoucherTab";
 import ChartTab from "./tab/ChartTab";
 import UserTab from "./tab/UserTab";
+import Auth from "@/context/AuthContext";
+import { Role } from "@/constant/role";
+import { EmptyData } from "./EmptyData";
 
 export default function DashboardLayout() {
   const { activeMenu } = useMenuContext();
+  const { userInfo } = Auth.useContainer();
 
-  const renderTable = () => {
+  const renderAdminTable = () => {
     switch (activeMenu) {
       case 'user':
         return <UserTab />;
@@ -20,7 +24,20 @@ export default function DashboardLayout() {
       case 'chart':
         return <ChartTab />;
       default:
-        return <h1>Hello World</h1>;
+        return <EmptyData />;
+    }
+  };
+
+  const renderManagerTable = () => {
+    switch (activeMenu) {
+      case 'product':
+        return <ProductTab />;
+      case 'voucher':
+        return <VoucherTab />;
+      case 'chart':
+        return <ChartTab />;
+      default:
+        return <EmptyData />;
     }
   };
 
@@ -30,7 +47,7 @@ export default function DashboardLayout() {
       <div className="w-full">
         <HeaderDashboard title="Trang quản trị" />
         <div className="pt-4 bg-slate-200">
-          {renderTable()}
+          {userInfo?.role && userInfo.role === Role.ADMIN ? renderAdminTable() : renderManagerTable()}
         </div>
       </div>
     </div>

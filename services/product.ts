@@ -45,3 +45,5 @@ export const getProductDetail = async (id: number): Promise<Product> => {
         throw error;
     }
 };
+
+
