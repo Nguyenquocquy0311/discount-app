@@ -15,9 +15,9 @@ export default function UserTable({ users, onView, onDelete, loading }: UserTabl
     { title: 'Username', dataIndex: 'username', key: 'username' },
     { title: 'Name', dataIndex: 'name', key: 'name' },
     { title: 'Email', dataIndex: 'email', key: 'email' },
-    { 
-      title: 'Role', 
-      dataIndex: 'role', 
+    {
+      title: 'Role',
+      dataIndex: 'role',
       key: 'role',
       render: (role: { roleName: string }) => {
         let color = 'blue';
@@ -28,7 +28,7 @@ export default function UserTable({ users, onView, onDelete, loading }: UserTabl
         }
         return (
           <Tag color={color}>
-            {role.roleName.toUpperCase()}
+            {role.roleName}
           </Tag>
         );
       }
@@ -37,7 +37,7 @@ export default function UserTable({ users, onView, onDelete, loading }: UserTabl
       title: 'Actions',
       key: 'actions',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      render: (text: any, user: UserResponse ) => (
+      render: (text: any, user: UserResponse) => (
         <>
           <Button onClick={() => onView(user)} className="border-none">
             <EditOutlined />

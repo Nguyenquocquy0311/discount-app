@@ -10,7 +10,7 @@ export const getListAccount = async (): Promise<UserResponse[]> => {
             throw new Error('Token is not available');
         }
 
-        const response = await fetch(`${path}/list_account`, {
+        const response = await fetch(`${path}/admin/list_account`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -29,6 +29,60 @@ export const getListAccount = async (): Promise<UserResponse[]> => {
         throw error;
     }
 };
+
+export const addAccount = async (username: string, name: string, email: string, password: string, roleId: number): Promise<void> => {
+    try {
+        if (!token) {
+            throw new Error('Token is not available');
+        }
+
+        const response = await fetch(`${path}/admin/create_account`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ username, name, email, password, roleId })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to add account');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error adding account:', error);
+        throw error;
+    }
+}
+
+export const updateAccount = async (id: number, username: string, name: string, email: string, roleId: number): Promise<void> => {
+    try {
+        if (!token) {
+            throw new Error('Token is not available');
+        }
+
+        const response = await fetch(`${path}/admin/update_info/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ username, name, email, roleId })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update account');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error updating account:', error);
+        throw error;
+    }
+}
 
 export const uploadAvatar = async (file: File): Promise<UserType> => {
     try {
@@ -86,5 +140,7 @@ export const updateUserInfo = async (name: string, email: string): Promise<UserT
         throw error;
     }
 };
+
+
 
 

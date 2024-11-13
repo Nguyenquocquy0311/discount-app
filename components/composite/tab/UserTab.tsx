@@ -2,7 +2,7 @@ import { Button, Input, Modal, Form, notification, Select } from "antd";
 import { useEffect, useState } from "react";
 import UserTable from "../table/UserTable";
 import { UserResponse } from "@/types/user";
-import { getListAccount } from "@/services/user";
+import { addAccount, getListAccount, updateAccount } from "@/services/user";
 
 export default function UserTab() {
   const [users, setUsers] = useState<UserResponse[]>([]);
@@ -43,9 +43,10 @@ export default function UserTab() {
     if (selectedUser) {
       form.setFieldsValue({
         username: selectedUser.username,
+        password: selectedUser.password,
         name: selectedUser.name,
         email: selectedUser.email,
-        role: selectedUser.role.roleName,
+        roleId: selectedUser.role.id,
       });
     } else {
       form.resetFields();
@@ -66,8 +67,12 @@ export default function UserTab() {
   const handleFormSubmit = async (values: UserResponse) => {
     try {
       if (isEditMode && selectedUser) {
-        // TODO: Implement API call to update user
-        // For now, we'll update the local state
+        // try {
+        //   await updateAccount(selectedUser.id, values.username, values.name, values.email, values.password, values.role.id);
+        // } catch (error) {
+        //   console.error('Error updating account:', error);
+        //   notification.error({ message: "Failed to update account" });
+        // }
         setUsers((prev) =>
           prev.map((user) =>
             user.id === selectedUser.id ? { ...selectedUser, ...values } : user
@@ -75,11 +80,14 @@ export default function UserTab() {
         );
         notification.success({ message: "Người dùng đã được chỉnh sửa!" });
       } else {
-        // TODO: Implement API call to add new user
-        // For now, we'll update the local state
-        const newUser = { ...values, id: Date.now() };
-        setUsers((prev) => [...prev, newUser]);
-        notification.success({ message: "Người dùng mới đã được thêm!" });
+        try {
+          await addAccount(values.username, values.name, values.email, values.password, values.role.id);
+          notification.success({ message: "Người dùng mới đã được thêm!" });
+          fetchUsers();
+        } catch (error) {
+          console.error('Error adding account:', error);
+          notification.error({ message: "Failed to add account" });
+        }
       }
       setIsModalVisible(false);
     } catch (error) {
@@ -120,7 +128,6 @@ export default function UserTab() {
         </Button>
       </div>
 
-      {/* User Table with View, Edit, Delete options */}
       <UserTable
         users={filteredUsers}
         onView={(user) => showModal(user)}
@@ -150,6 +157,16 @@ export default function UserTab() {
             <Input />
           </Form.Item>
 
+          {!isEditMode && (
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[{ required: true, message: 'Please input the password!' }]}
+            >
+              <Input.Password />
+            </Form.Item>
+          )}
+
           <Form.Item
             label="Name"
             name="name"
@@ -171,13 +188,13 @@ export default function UserTab() {
 
           <Form.Item
             label="Role"
-            name="role"
+            name="roleId"
             rules={[{ required: true, message: 'Please select the role!' }]}
           >
             <Select>
-              <Select.Option value="ADMIN">Admin</Select.Option>
-              <Select.Option value="MANAGER">Manager</Select.Option>
-              <Select.Option value="USER">User</Select.Option>
+              <Select.Option value={1}>Admin</Select.Option>
+              <Select.Option value={2}>Manager</Select.Option>
+              <Select.Option value={3}>User</Select.Option>
             </Select>
           </Form.Item>
 
