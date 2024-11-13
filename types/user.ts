@@ -16,19 +16,11 @@ export interface UserResponse {
     email: string;
     password: string;
     avatar: string | null;
-    role: {
+    roleId: number
+    role:{
         id: number;
         roleName: string;
         createdAt: string;
         updatedAt: string;
     };
-    createdAt: string | null;
-    updatedAt: string;
-    enabled: boolean;
-    authorities: Array<{
-        authority: string;
-    }>;
-    accountNonExpired: boolean;
-    accountNonLocked: boolean;
-    credentialsNonExpired: boolean;
 }

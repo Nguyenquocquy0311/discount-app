@@ -2,7 +2,7 @@ import { Button, Input, Modal, Form, notification, Select } from "antd";
 import { useEffect, useState } from "react";
 import UserTable from "../table/UserTable";
 import { UserResponse } from "@/types/user";
-import { addAccount, getListAccount, updateAccount } from "@/services/user";
+import { addAccount, deleteUser, getListAccount, updateAccount } from "@/services/user";
 
 export default function UserTab() {
   const [users, setUsers] = useState<UserResponse[]>([]);
@@ -67,21 +67,22 @@ export default function UserTab() {
   const handleFormSubmit = async (values: UserResponse) => {
     try {
       if (isEditMode && selectedUser) {
-        // try {
-        //   await updateAccount(selectedUser.id, values.username, values.name, values.email, values.password, values.role.id);
-        // } catch (error) {
-        //   console.error('Error updating account:', error);
-        //   notification.error({ message: "Failed to update account" });
-        // }
-        setUsers((prev) =>
-          prev.map((user) =>
-            user.id === selectedUser.id ? { ...selectedUser, ...values } : user
-          )
-        );
+        try {
+          await updateAccount(selectedUser.id, values.username, values.name, values.email, values.roleId);
+          fetchUsers();
+        } catch (error) {
+          console.error('Error updating account:', error);
+          notification.error({ message: "Failed to update account" });
+        }
+        // setUsers((prev) =>
+        //   prev.map((user) =>
+        //     user.id === selectedUser.id ? { ...selectedUser, ...values } : user
+        //   )
+        // );
         notification.success({ message: "Người dùng đã được chỉnh sửa!" });
       } else {
         try {
-          await addAccount(values.username, values.name, values.email, values.password, values.role.id);
+          await addAccount(values.username, values.name, values.email, values.password, values.roleId);
           notification.success({ message: "Người dùng mới đã được thêm!" });
           fetchUsers();
         } catch (error) {
@@ -98,8 +99,7 @@ export default function UserTab() {
 
   const handleDelete = async (userId: number) => {
     try {
-      // TODO: Implement API call to delete user
-      // For now, we'll update the local state
+      await deleteUser(userId)
       setUsers((prev) => prev.filter((user) => user.id !== userId));
       notification.success({ message: "Người dùng đã được xoá!" });
     } catch (error) {

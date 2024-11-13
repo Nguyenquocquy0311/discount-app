@@ -30,6 +30,33 @@ export const getListAccount = async (): Promise<UserResponse[]> => {
     }
 };
 
+export const deleteUser = async (id: number): Promise<void> => {
+    try {
+        if (!token) {
+            throw new Error('Token is not available');
+        }
+
+        const response = await fetch(`${path}/admin/delete_account/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch products');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        throw error;
+    }
+};
+
+
 export const addAccount = async (username: string, name: string, email: string, password: string, roleId: number): Promise<void> => {
     try {
         if (!token) {
