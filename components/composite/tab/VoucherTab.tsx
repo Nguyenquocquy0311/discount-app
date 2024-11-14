@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Modal, Form, notification, Descriptions } from "antd";
 import VoucherTable from "../table/VoucherTable";
-import { getAllCoupon } from "@/services/coupon";
+import { deleteCoupon, getAllCoupon } from "@/services/coupon";
 import { Voucher } from '@/types/voucher';
 import { formatCurrency, formatDayMonthYear } from '@/helper';
 import { LinkOutlined } from '@ant-design/icons'
@@ -58,8 +58,21 @@ export default function VoucherTab() {
     setIsModalVisible(true);
   };
 
-  const handleDelete = (voucherId: number) => {
+  const handleDelete = async (voucherId: number) => {
     console.log('Delete voucher with ID:', voucherId);
+    try {
+      await deleteCoupon(voucherId);
+      notification.success({
+        message: 'Success',
+        description: 'Xóa voucher thành công',
+      });
+      fetchVouchers();
+    } catch (error) {
+      notification.error({
+        message: 'Error',
+        description: 'Failed to delete voucher',
+      });
+    }
   };
 
   const showDetailModal = (voucher: Voucher) => {
