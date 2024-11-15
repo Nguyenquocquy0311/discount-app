@@ -1,32 +1,54 @@
-import { Button, Input, Modal, Form, notification } from "antd";
-import { useState } from "react";
-import ProductTable, { Product } from "../table/ProductTable";
+import { Button, Input, Modal, Form, notification, Select } from "antd";
+import { useState, useEffect } from "react";
+import ProductTable from "../table/ProductTable";
+import { createProduct, deleteProduct, getAllProducts, getProductType, updateProduct } from "@/services/product";
+import { IProduct } from "@/types/product";
 
 export default function ProductTab() {
-  // Initial product data
-  const initialProducts: Product[] = [
-    { id: 1, name: 'Product 1', price: 100000, category: 'Category A', stock: 20 },
-    { id: 2, name: 'Product 2', price: 200000, category: 'Category B', stock: 15 },
-    { id: 3, name: 'Product 3', price: 150000, category: 'Category C', stock: 10 },
-    { id: 4, name: 'Product 4', price: 300000, category: 'Category D', stock: 5 },
-    { id: 5, name: 'Product 5', price: 250000, category: 'Category E', stock: 8 },
-  ];
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [productTypes, setProductTypes] = useState<{ id: number, category: string }[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    fetchProducts();
+    fetchProductTypes();
+  }, []);
 
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [searchTerm, setSearchTerm] = useState(""); // Store search term
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null); // Store selected product for viewing/editing
-  const [isModalVisible, setIsModalVisible] = useState(false); // Control modal visibility
-  const [isEditMode, setIsEditMode] = useState(false); // Determine if it's edit or add mode
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const data = await getAllProducts();
+      setProducts(data);
+    } catch (error) {
+      notification.error({
+        message: 'Error',
+        description: 'Failed to fetch vouchers',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Filter products based on search term
+  const fetchProductTypes = async () => {
+    try {
+      const data = await getProductType();
+      setProductTypes(data);
+    } catch (error) {
+      console.error('Error fetching product types:', error);
+    }
+  }
+
   const filteredProducts = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase())
+      product.productType.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Handle opening the modal for Add/Edit
-  const showModal = (product?: Product) => {
+  const showModal = (product?: IProduct) => {
     if (product) {
       setSelectedProduct(product); // Set product for editing
       setIsEditMode(true);
@@ -37,29 +59,39 @@ export default function ProductTab() {
     setIsModalVisible(true);
   };
 
-  // Handle form submission for Add/Edit
-  const handleFormSubmit = (values: Product) => {
+  const handleFormSubmit = async (values: { name: string; currentPrice: number; productType: number; affLink: string; image: string }) => {
     if (isEditMode && selectedProduct) {
-      // Edit product
-      setProducts((prev) =>
-        prev.map((product) =>
-          product.id === selectedProduct.id ? { ...selectedProduct, ...values } : product
-        )
-      );
-      notification.success({ message: "Sản phẩm đã được chỉnh sửa!" });
+      try {
+        await updateProduct(selectedProduct.id, values);
+        notification.success({ message: "Sản phẩm đã được chỉnh sửa!" });
+      } catch (error) {
+        notification.error({ message: "Failed to update product" });
+      }
     } else {
-      // Add new product
-      const newProduct = { ...values, id: products.length + 1 }; // Create new product with incremented ID
-      setProducts((prev) => [...prev, newProduct]);
-      notification.success({ message: "Sản phẩm mới đã được thêm!" });
+      try {
+        await createProduct(values);
+        notification.success({ message: "Sản phẩm mới đã được thêm!" });
+      } catch (error) {
+        notification.error({ message: "Failed to add product" });
+      }
     }
-    setIsModalVisible(false); // Close modal after submission
+    setIsModalVisible(false);
   };
 
-  // Handle product deletion
-  const handleDelete = (productId: number) => {
-    setProducts((prev) => prev.filter((product) => product.id !== productId));
-    notification.success({ message: "Sản phẩm đã được xoá!" });
+  const handleDelete = async (productId: number) => {
+    try {
+      await deleteProduct(productId);
+      notification.success({
+        message: 'Success',
+        description: 'Xóa sản phẩm thành công',
+      });
+      fetchProducts();
+    } catch (error) {
+      notification.error({
+        message: 'Error',
+        description: 'Failed to delete product',
+      });
+    }
   };
 
   return (
@@ -68,7 +100,6 @@ export default function ProductTab() {
       <div className="grid grid-flow-col justify-between py-5">
         <h1 className="font-sans mb-4">Có tất cả {filteredProducts.length} bản ghi</h1>
 
-        {/* Search Input */}
         <Input.Search
           placeholder="Tìm kiếm"
           value={searchTerm}
@@ -76,20 +107,17 @@ export default function ProductTab() {
           style={{ width: 200 }}
         />
 
-        {/* Add Product Button */}
         <Button type="primary" onClick={() => showModal()}>
           Thêm mới
         </Button>
       </div>
 
-      {/* Product Table with View, Edit, Delete options */}
       <ProductTable
         products={filteredProducts}
-        onView={(product) => showModal(product)} // View/Edit product
-        onDelete={(productId) => handleDelete(productId)} // Delete product
+        onView={(product) => showModal(product)}
+        onDelete={(productId) => handleDelete(productId)}
       />
 
-      {/* Add/Edit Modal */}
       <Modal
         title={isEditMode ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm mới"}
         visible={isModalVisible}
@@ -110,7 +138,7 @@ export default function ProductTab() {
 
           <Form.Item
             label="Giá"
-            name="price"
+            name="currentPrice"
             rules={[{ required: true, message: 'Vui lòng nhập giá!' }]}
           >
             <Input type="number" />
@@ -118,18 +146,26 @@ export default function ProductTab() {
 
           <Form.Item
             label="Danh mục"
-            name="category"
+            name="productType"
             rules={[{ required: true, message: 'Vui lòng nhập danh mục!' }]}
+          >
+            <Select options={productTypes.map((type) => ({ label: type.category, value: type.id }))} />
+          </Form.Item>
+
+          <Form.Item
+            label="Link"
+            name="affLink"
+            rules={[{ required: true, message: 'Vui lòng nhập link!' }]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item
-            label="Số lượng tồn kho"
-            name="stock"
-            rules={[{ required: true, message: 'Vui lòng nhập số lượng tồn kho!' }]}
+            label="Ảnh"
+            name="image"
+            rules={[{ required: true, message: 'Vui lòng nhập ảnh!' }]}
           >
-            <Input type="number" />
+            <Input />
           </Form.Item>
 
           <Form.Item>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Table, Popconfirm, Space } from "antd";
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import { Voucher } from '@/types/voucher';
-import { formatCurrency, formatDayMonthYear, truncateString } from "@/helper";
+import { formatCurrency, formatDayMonthYear, truncateString } from "@/utils/helper";
 
 interface VoucherTableProps {
   vouchers: Voucher[];
@@ -18,50 +18,50 @@ interface VoucherTableProps {
   onViewDetail: (voucher: Voucher) => void; // New prop for view detail action
 }
 
-export default function VoucherTable({ 
-  vouchers, 
-  loading, 
-  pagination, 
-  onTableChange, 
-  onView, 
+export default function VoucherTable({
+  vouchers,
+  loading,
+  pagination,
+  onTableChange,
+  onView,
   onDelete,
-  onViewDetail 
+  onViewDetail
 }: VoucherTableProps) {
   const columns = [
-    { 
-      title: 'Mã giảm giá', 
-      dataIndex: 'couponCode', 
+    {
+      title: 'Mã giảm giá',
+      dataIndex: 'couponCode',
       key: 'couponCode',
       render: (text: string) => truncateString(text, 20)
     },
-    { 
-      title: 'Tiêu đề', 
-      dataIndex: 'title', 
+    {
+      title: 'Tiêu đề',
+      dataIndex: 'title',
       key: 'title',
       render: (text: string) => truncateString(text, 30)
     },
-    { 
-      title: 'Giảm giá (%)', 
-      dataIndex: 'discountAmount', 
+    {
+      title: 'Giảm giá (%)',
+      dataIndex: 'discountAmount',
       key: 'discountAmount',
       render: (value: number) => `${value}%`
     },
-    { 
-      title: 'Giảm tối đa', 
-      dataIndex: 'discountReward', 
+    {
+      title: 'Giảm tối đa',
+      dataIndex: 'discountReward',
       key: 'discountReward',
       render: (value: number) => formatCurrency(value)
     },
-    { 
-      title: 'Đơn tối thiểu', 
-      dataIndex: 'minSpend', 
+    {
+      title: 'Đơn tối thiểu',
+      dataIndex: 'minSpend',
       key: 'minSpend',
       render: (value: number) => formatCurrency(value)
     },
     { title: 'Nền tảng', dataIndex: 'platform', key: 'platform' },
-    { 
-      title: 'Ngày hết hạn', 
-      dataIndex: 'expiredAt', 
+    {
+      title: 'Ngày hết hạn',
+      dataIndex: 'expiredAt',
       key: 'expiredAt',
       render: (date: string) => formatDayMonthYear(date)
     },
@@ -82,7 +82,7 @@ export default function VoucherTable({
             okText="Có"
             cancelText="Không"
           >
-            <Button danger className="border-none"><DeleteOutlined/></Button>
+            <Button danger className="border-none"><DeleteOutlined /></Button>
           </Popconfirm>
         </Space>
       ),
@@ -90,10 +90,10 @@ export default function VoucherTable({
   ];
 
   return (
-    <Table 
-      columns={columns} 
-      dataSource={vouchers} 
-      rowKey="id" 
+    <Table
+      columns={columns}
+      dataSource={vouchers}
+      rowKey="id"
       loading={loading}
       pagination={{
         ...pagination,

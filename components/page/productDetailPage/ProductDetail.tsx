@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Product } from '@/types/product';
 import { getProductDetail } from '@/services/product';
-import LineChart from '@/components/composite/LineChart';
+import LineChart from '@/components/composite/chart/LineChart';
 import { Rate, Tag, Tooltip } from 'antd';
 
 interface ProductDetailProps {
@@ -28,7 +28,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ id, product }) => {
     : { labels: [], datasets: [] };
 
   return (
-    <div className="container mx-auto p-8 my-12 bg-white shadow-2xl rounded-xl">
+    <div className="container mx-auto p-8 mb-12 shadow-2xl rounded-xl">
       <h1 className="text-4xl font-bold mb-8 text-gray-800">{product?.name}</h1>
       <div className="flex flex-col lg:flex-row gap-12">
         <div className="lg:w-1/2">
@@ -58,24 +58,10 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ id, product }) => {
           </div>
 
           <div className="bg-gray-50 p-6 rounded-xl shadow-inner">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Mã giảm giá</h2>
-            <div className='flex flex-wrap gap-3'>
-              {product?.vouchersFound.slice(0, 2).map((voucher: any) => (
-                <Tag color='blue' key={voucher.id} className="text-lg px-3 py-1">{voucher?.couponCode}</Tag>
-              ))}
-              {product?.vouchersFound?.length && product?.vouchersFound?.length > 2 && (
-                <Tooltip title={<ul>{product?.vouchersFound.slice(2).map((voucher: any) => <li key={voucher.id}>{voucher?.couponCode}</li>)}</ul>}>
-                  <Tag color='blue' className="text-lg px-3 py-1">+ {product?.vouchersFound?.length - 2}</Tag>
-                </Tooltip>
-              )}
-            </div>
-          </div>
-
-          <div className="bg-gray-50 p-6 rounded-xl shadow-inner">
             <h2 className="text-2xl font-semibold mb-4 text-gray-700">Đánh giá</h2>
             <div className="flex items-center space-x-4">
-              <Rate defaultValue={product.ratingAvg || 4} disabled allowHalf />
-              <span className="text-xl text-gray-600">{product?.ratingCount} lượt đánh giá</span>
+              <Rate defaultValue={product.ratingAvg || 0} disabled allowHalf />
+              <span className="text-xl text-gray-600">{product?.ratingCount || 30} lượt đánh giá</span>
             </div>
           </div>
         </div>

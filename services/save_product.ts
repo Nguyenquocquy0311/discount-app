@@ -1,4 +1,4 @@
-import { getAuthHeader, getAuthToken } from "@/helper";
+import { getAuthHeader, getAuthToken } from "@/utils/helper";
 import { IProduct } from "@/types/product";
 
 const path = 'http://localhost:8080/api/save_product';

@@ -5,10 +5,12 @@ import Footer from "@/components/common/Footer";
 import { Breadcrumb } from "antd";
 import SmoothTop from "../../composite/SmoothTop";
 import ProductDetail from "./ProductDetail";
-import { truncateString } from "@/helper";
+import { truncateString } from "@/utils/helper";
 import { routes } from "@/constant/routes";
 import { getProductDetail } from '@/services/product';
 import { Product } from '@/types/product';
+import VoucherMatching from './VoucherMatching';
+import ProductMatching from './ProductMatching';
 
 export default function ProductDetailPage() {
   const router = useRouter();
@@ -54,7 +56,11 @@ export default function ProductDetailPage() {
                 title: <span>{product ? truncateString(product.name, 30) : 'Đang tải...'}</span>,
               }
             ]} />
-          <ProductDetail id={Number(id)} product={product} />
+          <div className='p-4 pb-16 mb-16 rounded-xl'>
+            <ProductDetail id={Number(id)} product={product} />
+            <VoucherMatching vouchers={product?.vouchersFound.map(voucher => ({ ...voucher, updatedAt: '' })) || []} />
+            <ProductMatching products={product?.similarProducts || []} />
+          </div>
         </div>
         <Footer />
       </div>

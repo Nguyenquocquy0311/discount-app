@@ -1,4 +1,4 @@
-import { getAuthToken } from "@/helper";
+import { getAuthToken } from "@/utils/helper";
 import { UserResponse, UserType } from "@/types/user";
 
 const path = 'http://localhost:8080/api/account'

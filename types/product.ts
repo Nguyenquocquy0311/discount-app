@@ -72,5 +72,6 @@ export interface Product {
         title: string;
         longDescription: string;
     }[];
+    similarProducts: IProduct[];
 }
 

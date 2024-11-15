@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Modal, Form, notification, Descriptions } from "antd";
+import { Button, Input, Modal, Form, notification, Descriptions, Select } from "antd";
 import VoucherTable from "../table/VoucherTable";
-import { deleteCoupon, getAllCoupon } from "@/services/coupon";
+import { createCoupon, deleteCoupon, getAllCoupon, getCouponCategory } from "@/services/coupon";
 import { Voucher } from '@/types/voucher';
-import { formatCurrency, formatDayMonthYear } from '@/helper';
+import { formatCurrency, formatDayMonthYear } from '@/utils/helper';
 import { LinkOutlined } from '@ant-design/icons'
 import Link from 'next/link';
 
 export default function VoucherTab() {
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
+  const [couponCategories, setCouponCategories] = useState<{ id: number, categoryName: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
     current: 1,
@@ -20,9 +21,12 @@ export default function VoucherTab() {
   const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
   const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
   const [selectedVoucherForDetail, setSelectedVoucherForDetail] = useState<Voucher | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     fetchVouchers();
+    fetchCouponCategory();
   }, []);
 
   const fetchVouchers = async (page = 1) => {
@@ -45,6 +49,15 @@ export default function VoucherTab() {
     }
   };
 
+  const fetchCouponCategory = async () => {
+    try {
+      const data = await getCouponCategory();
+      setCouponCategories(data);
+    } catch (error) {
+      console.error('Error fetching coupon categories:', error);
+    }
+  }
+
   const handleTableChange = (newPagination: any) => {
     fetchVouchers(newPagination.current);
   };
@@ -54,12 +67,39 @@ export default function VoucherTab() {
   };
 
   const showModal = (voucher?: Voucher) => {
-    setSelectedVoucher(voucher || null);
+    if (voucher) {
+      setSelectedVoucher(voucher);
+      setIsEditMode(true);
+      form.setFieldsValue(voucher);
+    } else {
+      setSelectedVoucher(null);
+      setIsEditMode(false);
+      form.resetFields();
+    }
     setIsModalVisible(true);
   };
 
+  const handleFormSubmit = async (values: Voucher) => {
+    values.couponCategoryId = Number(values.couponCategoryId);
+    values.startAt = new Date(values.startAt).toISOString();
+    values.expiredAt = new Date(values.expiredAt).toISOString();
+    values.discountReward = Number(values.discountReward);
+    values.minSpend = Number(values.minSpend);
+    values.discountAmount = Number(values.discountAmount);
+
+    console.log(values);
+    try {
+      await createCoupon(values);
+      notification.success({ message: "Voucher mới đã được thêm!" });
+      setIsModalVisible(false);
+      fetchVouchers();
+    } catch (error) {
+      console.error('Error creating coupon:', error);
+      notification.error({ message: "Failed to add voucher" });
+    }
+  };
+
   const handleDelete = async (voucherId: number) => {
-    console.log('Delete voucher with ID:', voucherId);
     try {
       await deleteCoupon(voucherId);
       notification.success({
@@ -105,7 +145,7 @@ export default function VoucherTab() {
           Thêm mới
         </Button>
       </div>
-      
+
       <VoucherTable
         vouchers={filteredVouchers}
         loading={loading}
@@ -154,6 +194,138 @@ export default function VoucherTab() {
           </Descriptions>
         )}
       </Modal>
-    </div>
+
+      {/* Add/Edit Modal */}
+      <Modal
+        title={isEditMode ? "Chỉnh sửa voucher" : "Thêm voucher mới"}
+        open={isModalVisible}
+        style={{ top: 20 }}
+        onCancel={() => {
+          setIsModalVisible(false);
+          form.resetFields();
+        }}
+        footer={null}
+        width={800}
+      >
+        <Form
+          form={form}
+          onFinish={handleFormSubmit}
+          layout="vertical"
+          initialValues={{
+            discountAmount: 0,
+            discountReward: 0,
+            minSpend: 0,
+          }}
+        >
+          <div className="max-h-[50vh] overflow-y-auto">
+            <Form.Item
+              label="Mã voucher"
+              name="couponCode"
+              rules={[{ required: true, message: 'Vui lòng nhập mã voucher!' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Tiêu đề"
+              name="title"
+              rules={[{ required: true, message: 'Vui lòng nhập tiêu đề!' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Nền tảng"
+              name="platform"
+              rules={[{ required: true, message: 'Vui lòng nhập nền tảng!' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Phần trăm giảm giá"
+              name="discountAmount"
+              rules={[{ required: true, message: 'Vui lòng nhập phần trăm giảm giá!' }]}
+            >
+              <Input type="number" suffix="%" />
+            </Form.Item>
+
+            <Form.Item
+              label="Số tiền giảm"
+              name="discountReward"
+              rules={[{ required: true, message: 'Vui lòng nhập số tiền giảm!' }]}
+            >
+              <Input type="number" />
+            </Form.Item>
+
+            <Form.Item
+              label="Số tiền tối thiểu"
+              name="minSpend"
+              rules={[{ required: true, message: 'Vui lòng nhập số tiền tối thiểu!' }]}
+            >
+              <Input type="number" />
+            </Form.Item>
+
+            <Form.Item
+              label="Link tiếp thị liên kết"
+              name="affLink"
+              rules={[{ required: true, message: 'Vui lòng nhập link tiếp thị!' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Ngày bắt đầu"
+              name="startAt"
+              rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu!' }]}
+            >
+              <Input type="datetime" />
+            </Form.Item>
+
+            <Form.Item
+              label="Ngày hết hạn"
+              name="expiredAt"
+              rules={[{ required: true, message: 'Vui lòng chọn ngày hết hạn!' }]}
+            >
+              <Input type="datetime" />
+            </Form.Item>
+
+            <Form.Item
+              label="Status"
+              name="status"
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Ghi chú"
+              name="note"
+            >
+              <Input.TextArea />
+            </Form.Item>
+
+            <Form.Item
+              label="Danh mục"
+              name="couponCategoryId"
+              rules={[{ required: true, message: 'Vui lòng chọn danh mục!' }]}
+            >
+              <Select options={couponCategories.map((category) => ({ label: category.categoryName, value: category.id }))} />
+            </Form.Item>
+
+            <Form.Item
+              label="Mô tả chi tiết"
+              name="longDescription"
+            >
+              <Input.TextArea rows={4} />
+            </Form.Item>
+          </div>
+          <div className='py-5'>
+            <Button type="primary" htmlType="submit">
+              {isEditMode ? "Cập nhật" : "Thêm mới"}
+            </Button>
+          </div>
+        </Form>
+      </Modal>
+    </div >
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Select } from "antd";
-import RevenueChart from "../RevenueChart";
+import RevenueChart from "../chart/RevenueChart";
 
 // Ant Design Select Option
 const { Option } = Select;
@@ -103,7 +103,7 @@ const ChartTab = () => {
             ))}
           </Select>
         </div>
-        
+
         <div className="flex items-center mb-4">
           {/* Asset Selector using Ant Design Select */}
           <label htmlFor="asset-select" className="text-[16px]">Chọn sản phẩm:</label>
