@@ -1,4 +1,4 @@
-import { VoucherCard } from "@/components/composite/VoucherCard";
+import { VoucherCard } from "@/components/composite/card/VoucherCard";
 import { Voucher } from "@/types/voucher";
 import { useState } from "react";
 

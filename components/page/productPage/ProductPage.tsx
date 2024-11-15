@@ -1,7 +1,7 @@
 import Header from "@/components/composite/header/Header";
 import Footer from "@/components/common/Footer";
 import { Breadcrumb } from "antd";
-import ProductList from "../../composite/ProductList";
+import ProductList from "./components/ProductList";
 import SmoothTop from "../../composite/SmoothTop";
 import GiftBanner from "./components/GiftBanner";
 import { routes } from "@/constant/routes";

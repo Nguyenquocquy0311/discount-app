@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Radio, Pagination, message, Skeleton } from 'antd';
 import { Voucher } from '@/types/voucher';
 import { getValidCoupon } from '@/services/coupon';
-import { VoucherCard } from './VoucherCard';
+import { VoucherCard } from './card/VoucherCard';
 
 const VoucherList = () => {
   const [vouchers, setVouchers] = useState<Voucher[]>([])

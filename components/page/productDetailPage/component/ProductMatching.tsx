@@ -1,4 +1,4 @@
-import ProductCard from "@/components/composite/ProductCard";
+import ProductCard from "@/components/composite/card/ProductCard";
 import Auth from "@/context/AuthContext";
 import { saveProduct } from "@/services/save_product";
 import { IProduct, Product } from "@/types/product";

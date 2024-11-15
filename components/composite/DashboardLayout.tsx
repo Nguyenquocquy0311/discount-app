@@ -7,7 +7,7 @@ import ChartTab from "./tab/ChartTab";
 import UserTab from "./tab/UserTab";
 import Auth from "@/context/AuthContext";
 import { Role } from "@/constant/role";
-import { EmptyData } from "./EmptyData";
+import { EmptyData } from "../common/EmptyData";
 
 export default function DashboardLayout() {
   const { activeMenu } = useMenuContext();

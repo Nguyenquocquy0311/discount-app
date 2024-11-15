@@ -1,16 +1,16 @@
 import Header from "@/components/composite/header/Header";
-import AdsBanner from "../../composite/AdsBanner";
+import AdsBanner from "../../common/AdsBanner";
 import Footer from "@/components/common/Footer";
 import { Breadcrumb } from "antd";
-import VoucherList from "../../composite/VoucherList";
 import SmoothTop from "../../composite/SmoothTop";
 import { routes } from "@/constant/routes";
+import VoucherList from "./component/VoucherList";
 
 export default function DiscountCodePage() {
 
   return (
     <>
-      <Header/>
+      <Header />
       <div className="pt-16 bg-slate-100">
         <AdsBanner />
         <div className="container">
@@ -20,27 +20,27 @@ export default function DiscountCodePage() {
             }}
             className="my-4"
             items={[
-            {
-              href: routes.home,
-              title: (
-                <>
-                  <span>Trang chủ</span>
-                </>
-              ),
-            },
-            {
-              title: (
-                <>
-                  <span>Mã giảm giá</span>
-                </>
-              ),
-            }
-          ]} />
+              {
+                href: routes.home,
+                title: (
+                  <>
+                    <span>Trang chủ</span>
+                  </>
+                ),
+              },
+              {
+                title: (
+                  <>
+                    <span>Mã giảm giá</span>
+                  </>
+                ),
+              }
+            ]} />
           <VoucherList />
         </div>
         <Footer />
       </div>
-      <SmoothTop/>
+      <SmoothTop />
     </>
   );
 }

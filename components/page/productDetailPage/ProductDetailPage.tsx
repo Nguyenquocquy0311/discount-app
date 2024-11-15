@@ -4,13 +4,13 @@ import Header from "@/components/composite/header/Header";
 import Footer from "@/components/common/Footer";
 import { Breadcrumb } from "antd";
 import SmoothTop from "../../composite/SmoothTop";
-import ProductDetail from "./ProductDetail";
+import ProductDetail from "./component/ProductDetail";
 import { truncateString } from "@/utils/helper";
 import { routes } from "@/constant/routes";
 import { getProductDetail } from '@/services/product';
 import { Product } from '@/types/product';
-import VoucherMatching from './VoucherMatching';
-import ProductMatching from './ProductMatching';
+import VoucherMatching from './component/VoucherMatching';
+import ProductMatching from './component/ProductMatching';
 
 export default function ProductDetailPage() {
   const router = useRouter();

@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { useProduct } from '@/context/ProductContext';
 import { saveProduct } from '@/services/save_product';
 import { getAuthToken } from '@/utils/helper';
-import ProductCard from './ProductCard';
+import ProductCard from '../../../composite/card/ProductCard';
 const { Option } = Select;
 
 const ProductList: React.FC = () => {
