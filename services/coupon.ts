@@ -68,6 +68,26 @@ export const createCoupon = async (coupon: Voucher): Promise<void> => {
     }
 };
 
+export const updateCoupon = async (id:number ,coupon: Voucher): Promise<void> => {
+    try {
+        const response = await fetch(`${path}/update/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(coupon)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update coupon');
+        }
+    } catch (error) {
+        console.error('Error updating coupon:', error);
+        throw error;
+    }
+};   
+
 export const deleteCoupon = async (id: number): Promise<void> => {
     try {
         const response = await fetch(`${path}/delete/${id}`, {
