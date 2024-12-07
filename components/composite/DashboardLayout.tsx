@@ -8,6 +8,7 @@ import UserTab from "./tab/UserTab";
 import Auth from "@/context/AuthContext";
 import { Role } from "@/constant/role";
 import { EmptyData } from "../common/EmptyData";
+import SettingTab from "./tab/SettingTab";
 
 export default function DashboardLayout() {
   const { activeMenu } = useMenuContext();
@@ -23,6 +24,8 @@ export default function DashboardLayout() {
         return <VoucherTab />;
       case 'chart':
         return <ChartTab />;
+      case 'setting':
+        return <SettingTab />;
       default:
         return <EmptyData />;
     }

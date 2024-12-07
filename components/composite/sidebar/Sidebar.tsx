@@ -1,5 +1,5 @@
 import { useMenuContext } from '@/context/MenuSidebarContext';
-import { LineChartOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SnippetsOutlined, TagsOutlined, UsergroupDeleteOutlined } from '@ant-design/icons';
+import { LineChartOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SnippetsOutlined, TagsOutlined, UsergroupDeleteOutlined, SettingOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -30,6 +30,11 @@ export default function Sidebar() {
             title: 'Doanh thu',
             key: 'chart'
         },
+        {
+            icon: <SettingOutlined />,
+            title: 'Cài đặt',
+            key: 'setting'
+        }
     ];
 
     const handleScaleSidebar = () => {
