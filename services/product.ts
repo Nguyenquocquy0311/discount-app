@@ -1,10 +1,11 @@
 import { getAuthToken } from "@/utils/helper";
 import { IProduct, Product } from "@/types/product";
 
-const token = getAuthToken();
+let token = getAuthToken();
 
 export const getAllProducts = async (): Promise<IProduct[]> => {
     try {
+        token = getAuthToken();
         const response = await fetch('http://localhost:8080/api/products', {
             method: 'GET',
             headers: {
@@ -27,6 +28,7 @@ export const getAllProducts = async (): Promise<IProduct[]> => {
 
 export const getProductDetail = async (id: number): Promise<Product> => {
     try {
+        token = getAuthToken();
         const response = await fetch(`http://localhost:8080/api/product/detail?id=${id}`, {
             method: 'GET',
             headers: {
@@ -48,6 +50,7 @@ export const getProductDetail = async (id: number): Promise<Product> => {
 
 export const getProductType = async (): Promise<{ id: number, category: string }[]> => {
     try {
+        token = getAuthToken();
         const response = await fetch('http://localhost:8080/api/product/get_product_type', {
             method: 'GET',
             headers: {
@@ -76,6 +79,7 @@ export const createProduct = async (product: {
     image: string
 }): Promise<void> => {
     try {
+        token = getAuthToken();
         const response = await fetch('http://localhost:8080/api/product/create', {
             method: 'POST',
             headers: {
@@ -105,6 +109,7 @@ export const updateProduct = async (id: number, product: {
     image: string
 }): Promise<void> => {
     try {
+        token = getAuthToken();
         const response = await fetch(`http://localhost:8080/api/product/update/${id}`, {
             method: 'PUT',
             headers: {
@@ -125,6 +130,7 @@ export const updateProduct = async (id: number, product: {
 
 export const deleteProduct = async (id: number): Promise<void> => {
     try {
+        token = getAuthToken();
         const response = await fetch(`http://localhost:8080/api/product/delete/${id}`, {
             method: 'DELETE',
             headers: {

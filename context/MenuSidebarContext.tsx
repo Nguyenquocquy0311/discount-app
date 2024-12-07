@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { Role } from '@/constant/role';
+import Auth from './AuthContext';
 
 interface MenuContextType {
     activeMenu: string;
@@ -7,8 +9,15 @@ interface MenuContextType {
 
 const MenuSidebarContext = createContext<MenuContextType | undefined>(undefined);
 
-export const MenuProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [activeMenu, setActiveMenu] = useState<string>('user');
+export const MenuProvider: React.FC<{ children: ReactNode;}> = ({ children}) => {
+    const { userInfo } = Auth.useContainer();
+    const role = userInfo?.role ?? Role.USER;
+    const defaultMenu = role === Role.ADMIN ? 'user' : role === Role.MANAGER ? 'product' : 'default';
+    const [activeMenu, setActiveMenu] = useState<string>(defaultMenu);
+
+    useEffect(() => {
+        setActiveMenu(defaultMenu);
+    }, [defaultMenu]);
 
     return (
         <MenuSidebarContext.Provider value={{ activeMenu, setActiveMenu }}>

@@ -105,8 +105,6 @@ export default function VoucherTab() {
     values.discountReward = Number(values.discountReward);
     values.minSpend = Number(values.minSpend);
     values.discountAmount = Number(values.discountAmount);
-
-    console.log(values);
     try {
       if (isEditMode && selectedVoucher) {
         try {

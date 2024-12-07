@@ -12,10 +12,28 @@ export default function ProductTab() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm(); // Hook for form instance
+
   useEffect(() => {
     fetchProducts();
     fetchProductTypes();
   }, []);
+
+  useEffect(() => {
+    if (selectedProduct) {
+      // When selectedProduct changes, update the form values
+      form.setFieldsValue({
+        name: selectedProduct.name,
+        currentPrice: selectedProduct.currentPrice,
+        productType: selectedProduct.productType.id,
+        affLink: selectedProduct.affLink,
+        image: selectedProduct.image
+      });
+    } else {
+      // If no product is selected, reset form
+      form.resetFields();
+    }
+  }, [selectedProduct, form]);
 
   const fetchProducts = async () => {
     try {
@@ -25,7 +43,7 @@ export default function ProductTab() {
     } catch (error) {
       notification.error({
         message: 'Error',
-        description: 'Failed to fetch vouchers',
+        description: 'Failed to fetch products',
       });
     } finally {
       setLoading(false);
@@ -39,7 +57,7 @@ export default function ProductTab() {
     } catch (error) {
       console.error('Error fetching product types:', error);
     }
-  }
+  };
 
   const filteredProducts = products.filter(
     (product) =>
@@ -76,6 +94,7 @@ export default function ProductTab() {
       }
     }
     setIsModalVisible(false);
+    setSelectedProduct(null); // Reset selected product after submission
   };
 
   const handleDelete = async (productId: number) => {
@@ -125,7 +144,7 @@ export default function ProductTab() {
         footer={null}
       >
         <Form
-          initialValues={selectedProduct || { name: '', price: '', category: '', stock: '' }}
+          form={form}
           onFinish={handleFormSubmit}
         >
           <Form.Item
@@ -168,11 +187,14 @@ export default function ProductTab() {
             <Input />
           </Form.Item>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              {isEditMode ? "Cập nhật" : "Thêm mới"}
+          <div className="flex justify-end gap-3">
+            <Button type="default" onClick={() => setIsModalVisible(false)}>
+              Hủy
             </Button>
-          </Form.Item>
+            <Button type="primary" htmlType="submit">
+              {isEditMode ? "Lưu thay đổi" : "Thêm mới"}
+            </Button>
+          </div>
         </Form>
       </Modal>
     </div>

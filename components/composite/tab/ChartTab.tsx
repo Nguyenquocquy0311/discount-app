@@ -11,9 +11,8 @@ const ChartTab = () => {
 
   // Fake asset data
   const assets = [
-    { id: 1, name: 'Product A' },
-    { id: 2, name: 'Product B' },
-    { id: 3, name: 'Product C' },
+    { id: 1, name: 'Shopee' },
+    { id: 2, name: 'Lazada' },
   ];
 
   // Available years
@@ -23,20 +22,20 @@ const ChartTab = () => {
   const revenueData: Record<string, Record<string, number[]>> = {
     '2022': {
       '': [900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000],
-      'Product A': [400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950],
-      'Product B': [300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850],
+      'Shopee': [400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950],
+      'Lazada': [300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850],
       'Product C': [200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750],
     },
     '2023': {
       '': [1000, 1200, 1500, 1700, 1600, 1800, 1900, 2100, 2200, 2400, 2500, 2700],
-      'Product A': [500, 600, 700, 800, 750, 850, 900, 1000, 1100, 1200, 1300, 1400],
-      'Product B': [300, 400, 500, 600, 550, 600, 700, 800, 900, 1000, 1100, 1200],
+      'Shopee': [500, 600, 700, 800, 750, 850, 900, 1000, 1100, 1200, 1300, 1400],
+      'Lazada': [300, 400, 500, 600, 550, 600, 700, 800, 900, 1000, 1100, 1200],
       'Product C': [200, 200, 300, 300, 300, 350, 400, 500, 500, 600, 600, 700],
     },
     '2024': {
       '': [1100, 1300, 1400, 1600, 1500, 1700, 1800, 2000, 2100, 2300, 2400, 2600],
-      'Product A': [600, 650, 700, 800, 750, 850, 900, 1000, 1100, 1200, 1300, 1350],
-      'Product B': [350, 400, 450, 500, 550, 600, 700, 750, 800, 850, 900, 950],
+      'Shopee': [600, 650, 700, 800, 750, 850, 900, 1000, 1100, 1200, 1300, 1350],
+      'Lazada': [350, 400, 450, 500, 550, 600, 700, 750, 800, 850, 900, 950],
       'Product C': [150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700],
     },
   };
@@ -106,16 +105,16 @@ const ChartTab = () => {
 
         <div className="flex items-center mb-4">
           {/* Asset Selector using Ant Design Select */}
-          <label htmlFor="asset-select" className="text-[16px]">Chọn sản phẩm:</label>
+          <label htmlFor="asset-select" className="text-[16px]">Chọn sàn:</label>
           <Select
             id="asset-select"
             value={selectedAsset}
             onChange={handleAssetChange}
             className="mx-4"
             style={{ width: 200 }}
-            placeholder="Tất cả tài sản"
+            placeholder="Tất cả"
           >
-            <Option value="">Tất cả tài sản</Option>
+            <Option value="">Tất cả</Option>
             {assets.map((asset) => (
               <Option key={asset.id} value={asset.name}>
                 {asset.name}

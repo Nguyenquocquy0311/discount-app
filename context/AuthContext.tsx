@@ -15,6 +15,8 @@ import { firebaseApp } from '../lib/firebase';
 import { createContainer } from 'unstated-next';
 import { notification } from 'antd';
 import { UserType } from '../types/user';
+import { Router, useRouter } from 'next/router';
+import { routes } from '@/constant/routes';
 
 type UserInfo = UserType | null;
 
@@ -26,6 +28,7 @@ function useAuth() {
   const [isLoadingJwtSignup, setIsLoadingJwtSignup] = useState<boolean>(false);
   const [isLoadingGoogleLogin, setIsLoadingGoogleLogin] = useState<boolean>(false);
   const [isOpenModalForgotPassword, setIsOpenModalForgotPassword] = useState(false);
+  const router = useRouter();
 
   const closeModalLogin = () => setIsOpenModalLogin(false);
   const openModalLogin = () => setIsOpenModalLogin(true);
@@ -163,10 +166,11 @@ function useAuth() {
     //   setUserInfo(null);
     //   localStorage.removeItem('user-info');
     // });
-
-    setUserInfo(null);
-    localStorage.removeItem('user-info');
-    sessionStorage.removeItem('auth-token');
+    router.push(routes.home).then(() => {
+      setUserInfo(null);
+      localStorage.removeItem('user-info');
+      sessionStorage.removeItem('auth-token');
+    });
   };
 
   useEffect(() => {

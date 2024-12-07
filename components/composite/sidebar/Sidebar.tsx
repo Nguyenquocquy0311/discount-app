@@ -4,17 +4,22 @@ import { Tooltip } from 'antd';
 import classNames from 'classnames';
 import { useState } from 'react';
 import Logo from '../header/Logo';
+import { Role } from '@/constant/role';
 
-export default function Sidebar() {
+interface SidebarProps {
+    role: Role;
+}
+
+export default function Sidebar({ role }: SidebarProps) {
     const [scaleSidebar, setScaleSidebar] = useState(false);
     const { activeMenu, setActiveMenu } = useMenuContext();
 
     const menu = [
-        {
+        ...(role === Role.ADMIN ? [{
             icon: <UsergroupDeleteOutlined />,
             title: 'Người dùng',
             key: 'user'
-        },
+        }] : []),
         {
             icon: <SnippetsOutlined />,
             title: 'Sản phẩm',
@@ -25,11 +30,11 @@ export default function Sidebar() {
             title: 'Voucher',
             key: 'voucher'
         },
-        {
+        ...(role === Role.ADMIN ? [{
             icon: <LineChartOutlined />,
             title: 'Doanh thu',
-            key: 'chart'
-        },
+            key: 'revenue'
+        }] : [])
     ];
 
     const handleScaleSidebar = () => {

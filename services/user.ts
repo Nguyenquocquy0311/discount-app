@@ -2,10 +2,11 @@ import { getAuthToken } from "@/utils/helper";
 import { UserResponse, UserType } from "@/types/user";
 
 const path = 'http://localhost:8080/api/account'
-const token = getAuthToken();
+let token = getAuthToken();
 
 export const getListAccount = async (): Promise<UserResponse[]> => {
     try {
+        token = getAuthToken();
         if (!token) {
             throw new Error('Token is not available');
         }
@@ -32,6 +33,7 @@ export const getListAccount = async (): Promise<UserResponse[]> => {
 
 export const deleteUser = async (id: number): Promise<void> => {
     try {
+        token = getAuthToken();
         if (!token) {
             throw new Error('Token is not available');
         }
@@ -59,6 +61,7 @@ export const deleteUser = async (id: number): Promise<void> => {
 
 export const addAccount = async (username: string, name: string, email: string, password: string, roleId: number): Promise<void> => {
     try {
+        token = getAuthToken();
         if (!token) {
             throw new Error('Token is not available');
         }
@@ -86,6 +89,7 @@ export const addAccount = async (username: string, name: string, email: string, 
 
 export const updateAccount = async (id: number, username: string, name: string, email: string, roleId: number): Promise<void> => {
     try {
+        token = getAuthToken();
         if (!token) {
             throw new Error('Token is not available');
         }
@@ -113,6 +117,7 @@ export const updateAccount = async (id: number, username: string, name: string, 
 
 export const uploadAvatar = async (file: File): Promise<UserType> => {
     try {
+        token = getAuthToken();
         if (!token) {
             throw new Error('Token is not available');
         }
@@ -143,6 +148,7 @@ export const uploadAvatar = async (file: File): Promise<UserType> => {
 
 export const updateUserInfo = async (name: string, email: string): Promise<UserType> => {
     try {
+        token = getAuthToken();
         if (!token) {
             throw new Error('Token is not available');
         }

@@ -20,7 +20,7 @@ export default function UserMenu() {
         <Menu>
             <div className="mx-4">
                 <p className="font-medium text-lg">{userInfo?.name || 'Guest'}</p>
-                <p className="text-slate-500">Vai trò: {userInfo?.role}</p>
+                <p className="text-slate-500">Vai trò: {userInfo?.role === Role.MANAGER ? "EMPLOYEE" : userInfo?.role}</p>
             </div>
             <Menu.Divider />
             {userInfo?.role && allowedRoutes.includes(router.pathname) && (
@@ -43,7 +43,7 @@ export default function UserMenu() {
             )}
             {userInfo?.role && userInfo.role === Role.MANAGER && (
                 <Menu.Item key="5" icon={<LineChartOutlined />} onClick={() => router.push(routes.manager)}>
-                    Manager
+                    Employee
                 </Menu.Item>
             )}
             <Menu.Divider />

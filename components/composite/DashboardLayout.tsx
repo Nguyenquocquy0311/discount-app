@@ -21,7 +21,7 @@ export default function DashboardLayout() {
         return <ProductTab />;
       case 'voucher':
         return <VoucherTab />;
-      case 'chart':
+      case 'revenue':
         return <ChartTab />;
       default:
         return <EmptyData />;
@@ -40,10 +40,11 @@ export default function DashboardLayout() {
         return <EmptyData />;
     }
   };
+  console.log(activeMenu)
 
   return (
     <div className="flex h-screen">
-      <Sidebar />
+      <Sidebar role={userInfo?.role ?? Role.USER}/>
       <div className="w-full">
         <HeaderDashboard title="Trang quản trị" />
         <div className="pt-4 bg-slate-200">

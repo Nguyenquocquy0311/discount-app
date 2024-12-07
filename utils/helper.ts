@@ -12,6 +12,7 @@ export const formatDayMonthYear = (date: string) => {
 };
 
 export function formatCurrency(value: number): string {
+  console.log('value', value);
   if (value >= 1_000_000_000) {
     return `${(value / 1_000_000_000).toFixed(1)}B`;
   } else if (value >= 1_000_000) {

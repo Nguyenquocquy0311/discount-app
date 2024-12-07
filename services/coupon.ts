@@ -2,10 +2,11 @@ import { getAuthToken } from "@/utils/helper";
 import { Voucher } from "@/types/voucher";
 
 const path = 'http://localhost:8080/api/coupon'
-const token = getAuthToken();
+let token = getAuthToken();
 
 export const getAllCoupon = async (): Promise<Voucher[]> => {
     try {
+        token = getAuthToken();
         const response = await fetch(`${path}/get_all`, {
             method: 'GET',
             headers: {
@@ -28,6 +29,7 @@ export const getAllCoupon = async (): Promise<Voucher[]> => {
 
 export const getCouponCategory = async (): Promise<{ id: number, categoryName: string }[]> => {
     try {
+        token = getAuthToken();
         const response = await fetch(`${path}/get_coupon_category`, {
             method: 'GET',
             headers: {
@@ -50,6 +52,7 @@ export const getCouponCategory = async (): Promise<{ id: number, categoryName: s
 
 export const createCoupon = async (coupon: Voucher): Promise<void> => {
     try {
+        token = getAuthToken();
         const response = await fetch(`${path}/create`, {
             method: 'POST',
             headers: {
@@ -70,6 +73,7 @@ export const createCoupon = async (coupon: Voucher): Promise<void> => {
 
 export const updateCoupon = async (id:number ,coupon: Voucher): Promise<void> => {
     try {
+        token = getAuthToken();
         const response = await fetch(`${path}/update/${id}`, {
             method: 'PUT',
             headers: {
@@ -90,6 +94,7 @@ export const updateCoupon = async (id:number ,coupon: Voucher): Promise<void> =>
 
 export const deleteCoupon = async (id: number): Promise<void> => {
     try {
+        token = getAuthToken();
         const response = await fetch(`${path}/delete/${id}`, {
             method: 'DELETE',
             headers: {
@@ -112,6 +117,7 @@ export const deleteCoupon = async (id: number): Promise<void> => {
 
 export const getValidCoupon = async (): Promise<Voucher[]> => {
     try {
+        token = getAuthToken();
         const response = await fetch(`${path}/get_valid`, {
             method: 'GET',
             headers: {
